@@ -10,8 +10,5 @@
 
 #SBATCH -c 2
 
-cd $SLURM_SUBMIT_DIR
-
 date
 hostname
-echo "complete"
