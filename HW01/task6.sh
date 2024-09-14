@@ -12,7 +12,5 @@ module load nvidia/cuda
 
 date
 
-git clone https://github.com/Lebrra/repo759.git
-cd repo579/HW01
 g++ task6.cpp -Wall -O3 -std=c++17 -o task6
 ./task6 N
