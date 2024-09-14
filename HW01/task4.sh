@@ -14,3 +14,4 @@ cd $SLURM_SUBMIT_DIR
 
 date
 hostname
+echo "complete"
