@@ -11,6 +11,7 @@ module load gcc/13.2.0
 module load nvidia/cuda
 
 date
+echo $1
 
 g++ task6.cpp -Wall -O3 -std=c++17 -o task6
-./task6 N
+./task6 $1
