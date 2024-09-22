@@ -18,6 +18,6 @@ done
 
 for ((i=0; i<10; i++)) 
 do 
-pow=pow*2;
+set /a pow=pow*2;
 echo "$pow ";
 done
