@@ -11,7 +11,6 @@ module load nvidia/cuda
 
 date
 
-set pow=1
-for ((i=0; i<9; i++)) do set /a pow*=2; done
-
-for ((i=0; i<10; i++)) do set /a pow*=2; echo "$pow"; done
+pow=1
+for ((i=0; i<9; i++)) do pow=$(($pow*2)); done
+for ((i=0; i<10; i++)) do pow=$(($pow*2)); echo "$pow"; done
