@@ -10,8 +10,7 @@ int main(int argc, char* argv[])
 {
 	auto start = chrono::steady_clock::now();
 
-	//int n = atoi(argv[1]);
-	int n = 500;
+	int n = atoi(argv[1]);
 
 	if (n <= 0) {
 		cout << "Invalid value of 'n' !";
@@ -37,6 +36,7 @@ int main(int argc, char* argv[])
 	auto timePassed = chrono::duration_cast<std::chrono::microseconds>(end - start);
 	
 	cout << "Results:\n";
+	cout << "element count:  \t" << n << endl;
 	cout << "time to process:\t" << timePassed.count() << " microseconds\n";
 	cout << "first element:  \t" << scanned[0] << endl;
 	cout << "last element:   \t" << scanned[n - 1] << endl;
