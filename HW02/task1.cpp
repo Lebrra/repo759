@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
 	cout << "element count:  \t" << n << endl;
 	cout << "time to process:\t" << timePassed.count() << " microseconds\n";
 	cout << "first element:  \t" << scanned[0] << endl;
-	cout << "last element:   \t" << scanned[n - 1] << endl;
+	cout << "last element:   \t" << scanned[n - 1] << endl << endl;
 	
 	free(randFloats);
 	free(scanned);
