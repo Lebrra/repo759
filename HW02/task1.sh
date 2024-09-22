@@ -13,7 +13,7 @@ date
 
 set pow=2
 for ((i=0; i<29; i++)) 
-do pow=pow*2; 
+do set /a pow=pow*2; 
 done
 
 for ((i=0; i<10; i++)) 
