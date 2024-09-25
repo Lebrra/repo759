@@ -56,6 +56,8 @@ int main(int argc, char* argv[])
 	cout << "last element:   \t" << g[n*n - 1] << endl;
 	
 	
-	free(randomF, randomW, g);
+	free(randomF);
+	free(randomW);
+	free(g);
 }
 
