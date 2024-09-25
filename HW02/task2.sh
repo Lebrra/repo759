@@ -11,7 +11,6 @@ module load nvidia/cuda
 g++ convolution.cpp task2.cpp -Wall -O3 -std=c++17 -o task2
 
 date
-n = $1
-m = $2
-if ((n > 0 && m > 0 && m % 2));
+
+if (($1 > 0 && $2 > 0 && $2 % 2));
 then ./task2 $1 $2; fi
