@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
 	
 	cout << "Results:\n";
 	cout << "element count:  \t" << n << endl;
-	cout << "time to process:\t" << timePassed.count() << " microseconds\n";
+	cout << "time to process:\t" << (timePassed.count() / 1000) << " milliseconds\n";
 	cout << "first element:  \t" << scanned[0] << endl;
 	cout << "last element:   \t" << scanned[n - 1] << endl << endl;
 	

@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 	float* g = c.doConvolve(randomF, randomW, n, m);
 
 	auto end = chrono::steady_clock::now();
-	auto timePassed = chrono::duration_cast<std::chrono::microseconds>(end - start) / 1000;
+	auto timePassed = chrono::duration_cast<std::chrono::microseconds>(end - start);
 
 	cout << "Results:\n";
 	cout << "time to process:\t" << (timePassed.count() / 1000) << " milliseconds\n";
