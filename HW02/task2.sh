@@ -13,4 +13,6 @@ g++ convolve.cpp task2.cpp -Wall -O3 -std=c++17 -o task2
 date
 
 if (($1 > 0 && $2 > 0 && $2 % 2));
-then ./task2 $1 $2; fi
+then ./task2 $1 $2; 
+else echo "Invalid n or m value!"; 
+fi
