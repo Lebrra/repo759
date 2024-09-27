@@ -40,7 +40,8 @@ void printArray(double* arr, int n) {
 
 int main(int argc, char* argv[])
 {
-	int n = 200;
+	int n = 1000;
+	cout << "Matrix size: \t" << n << endl << endl;
 
 	// seeding with chrono so I don't have to include the ctime library:
 	srand(chrono::system_clock::now().time_since_epoch().count());
