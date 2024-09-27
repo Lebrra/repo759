@@ -40,7 +40,7 @@ void printArray(double* arr, int n) {
 
 int main(int argc, char* argv[])
 {
-	int n = 5000;
+	int n = 200;
 
 	// seeding with chrono so I don't have to include the ctime library:
 	srand(chrono::system_clock::now().time_since_epoch().count());
