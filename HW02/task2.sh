@@ -8,7 +8,7 @@
 
 module load gcc/13.2.0
 module load nvidia/cuda
-g++ convolve.cpp task2.cpp -Wall -O3 -std=c++17 -o task2
+g++ convolution.cpp task2.cpp -Wall -O3 -std=c++17 -o task2
 
 date
 
