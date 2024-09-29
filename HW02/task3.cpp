@@ -28,7 +28,7 @@ void randFill(double* arr, vector<double>& vect, int length) {
 
 int main(int argc, char* argv[])
 {
-	int n = 2048;
+	int n = 1234;
 	cout << "Matrix size: \t" << n << endl << endl;
 
 	// seeding with chrono so I don't have to include the ctime library:
