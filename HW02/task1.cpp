@@ -1,7 +1,6 @@
 #include <iostream>
 #include <chrono>
 
-#include "scan.cpp"
 #include "scan.h"
 
 using namespace std;
@@ -29,18 +28,23 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	scan s;
-	float* scanned = s.doScan(randFloats, n);
+	float* scanned;
+	scanned = (float*)malloc(sizeof(float) * n);
 
-	auto end = chrono::steady_clock::now();
-	auto timePassed = chrono::duration_cast<std::chrono::microseconds>(end - start);
-	
-	cout << "Results:\n";
-	cout << "element count:  \t" << n << endl;
-	cout << "time to process:\t" << (timePassed.count() / 1000) << " milliseconds\n";
-	cout << "first element:  \t" << scanned[0] << endl;
-	cout << "last element:   \t" << scanned[n - 1] << endl << endl;
-	
+	if (scanned) {
+		scan(randFloats, scanned, n);
+
+		auto end = chrono::steady_clock::now();
+		auto timePassed = chrono::duration_cast<std::chrono::microseconds>(end - start);
+
+		cout << "Results:\n";
+		cout << "time to process:\t" << timePassed.count() << " microseconds\n";
+		cout << "first element:  \t" << scanned[0] << endl;
+		cout << "last element:   \t" << scanned[n - 1] << endl;
+
+		free(scanned);
+	}
+		
 	free(randFloats);
-	free(scanned);
+	
 }
