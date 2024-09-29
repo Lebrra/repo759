@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-#ifndef CONVOLVE_H
+#ifndef CONVOLUTION_H
 
 // I added this function because it made more sense to me; when I throw this all in a single method I don't get the same answers :(
 float getValueAtXY(int x, int y, const float* f, const float* w, size_t n, size_t m) {
