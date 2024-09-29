@@ -2,7 +2,6 @@
 #include <chrono>
 #include <vector>
 
-#include "matmul.cpp"
 #include "matmul.h"
 
 using namespace std;
@@ -27,17 +26,6 @@ void randFill(double* arr, vector<double>& vect, int length) {
 	}
 }
 
-void printArray(double* arr, int n) {
-	if (arr) {
-		cout << "Matrix:\n";
-		for (int i = 0; i < n * n; i++) {
-			cout << arr[i] << " ";
-			if (i % n == n - 1) cout << endl;
-		}
-		cout << endl;
-	}
-}
-
 int main(int argc, char* argv[])
 {
 	int n = 2048;
@@ -57,8 +45,6 @@ int main(int argc, char* argv[])
 	randFill(a, aVect, n * n);
 	randFill(b, bVect, n * n);
 
-	matmul mat;
-
 	for (int i = 0; i < 4; i++) {
 		empty(c, n * n);
 
@@ -66,16 +52,16 @@ int main(int argc, char* argv[])
 
 		switch (i) {
 			case 0: 
-				mat.mmul1(a, b, c, n);
+				mmul1(a, b, c, n);
 				break;
 			case 1:
-				mat.mmul2(a, b, c, n);
+				mmul2(a, b, c, n);
 				break;
 			case 2: 
-				mat.mmul3(a, b, c, n);
+				mmul3(a, b, c, n);
 				break;
 			case 3:
-				mat.mmul4(aVect, bVect, c, n);
+				mmul4(aVect, bVect, c, n);
 				break;
 		}
 
@@ -86,7 +72,6 @@ int main(int argc, char* argv[])
 		cout << "time to process:\t" << (timePassed.count() / 1000) << " milliseconds\n";
 		if (c) cout << "last element:\t\t" << c[n * n - 1] << endl;
 		cout << endl;
-		//printArray(c, n);
 	}
 
 	free(a);
