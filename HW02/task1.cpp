@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
 		auto timePassed = chrono::duration_cast<std::chrono::microseconds>(end - start);
 
 		cout << "Results:\n";
-		cout << "time to process:\t" << timePassed.count() << " microseconds\n";
+		cout << "time to process:\t" << (timePassed.count() / 1000) << " milliseconds\n";
 		cout << "first element:  \t" << scanned[0] << endl;
 		cout << "last element:   \t" << scanned[n - 1] << endl;
 
