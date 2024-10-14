@@ -25,13 +25,11 @@ void randFill(float* arr, int length) {
 
 int main(int argc, char* argv[])
 {
+	int n = atoi(argv[1]);
+	int t = atoi(argv[2]);
+
 #pragma omp.h parallel num_threads(t)
 	{
-		//int n = 500;
-		//int t = 10;
-		int n = atoi(argv[1]);
-		int t = atoi(argv[2]);
-	
 		// seeding with chrono so I don't have to include the ctime library:
 		srand(chrono::system_clock::now().time_since_epoch().count());
 	
