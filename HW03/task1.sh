@@ -3,8 +3,7 @@
 #SBATCH -p instruction
 #SBATCH -J HW03_Task1
 #SBATCH -o Task3_1.out -e Task3_1.err
-#SBATCH -t 0-00:05:00
-#SBATCH --gres=gpu:1 -c 1
+#SBATCH -t 0-00:01:00
 #SBATCH --cpus-per-task=20
 
 module load gcc/13.2.0
