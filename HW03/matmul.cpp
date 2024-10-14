@@ -7,13 +7,11 @@ using namespace std;
 
 void mmul(const float* A, const float* B, float* C, size_t n) {
 #pragma omp parallel for collapse(3)
-	{
-		for (int i = 0; i < n; i++) {
-			for (int k = 0; k < n; k++) {
-				for (int j = 0; j < n; j++) {
-					C[i * n + j] += A[i * n + k] * B[k * n + j];
-					cout << "thread: " << omp_get_thread_num() << endl;
-				}
+	for (int i = 0; i < n; i++) {
+		for (int k = 0; k < n; k++) {
+			for (int j = 0; j < n; j++) {
+				C[i * n + j] += A[i * n + k] * B[k * n + j];
+				cout << "thread: " << omp_get_thread_num() << endl;
 			}
 		}
 	}
