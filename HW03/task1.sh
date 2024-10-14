@@ -4,10 +4,8 @@
 #SBATCH -J HW03_Task1
 #SBATCH -o Task3_1.out -e Task3_1.err
 #SBATCH -t 0-00:01:00
-#SBATCH --cpus-per-task=20
+#SBATCH -c 20
 
-module load gcc/13.2.0
-module load nvidia/cuda
 g++ task1.cpp matmul.cpp -Wall -O3 -std=c++17 -o task1 -fopenmp
 date
 
