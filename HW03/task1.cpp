@@ -28,8 +28,8 @@ int main(int argc, char* argv[])
 	int n = atoi(argv[1]);
 	int t = atoi(argv[2]);
 
-//#pragma omp.h parallel num_threads(t)
-//	{
+#pragma omp.h parallel num_threads(t)
+	{
 		// seeding with chrono so I don't have to include the ctime library:
 		srand(chrono::system_clock::now().time_since_epoch().count());
 	
@@ -61,6 +61,6 @@ int main(int argc, char* argv[])
 		free(a);
 		free(b);
 		free(c);
-//	}
+	}
 	return 0;
 }
