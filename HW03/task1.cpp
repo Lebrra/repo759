@@ -1,3 +1,5 @@
+// compile with: /openmp or -fopenmp
+
 #include <iostream>
 #include <chrono>
 
@@ -27,6 +29,9 @@ int main(int argc, char* argv[])
 {
 	int n = atoi(argv[1]);
 	int t = atoi(argv[2]);
+
+	// second attempt to set thread count:
+	omp_set_num_threads(t);
 
 #pragma omp.h parallel num_threads(t)
 	{
