@@ -30,6 +30,8 @@ int main(int argc, char* argv[])
 
 #pragma omp.h parallel num_threads(t)
 	{
+		cout << "declared threads: " << omp_get_max_threads();
+
 		// seeding with chrono so I don't have to include the ctime library:
 		srand(chrono::system_clock::now().time_since_epoch().count());
 	
