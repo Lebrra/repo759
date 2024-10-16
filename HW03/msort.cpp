@@ -63,8 +63,6 @@ void msort_v2(int* arr, size_t n, size_t threshold) {
 
 
 int* msort_recursive(int* arr, size_t n, size_t threshold) {
-	#pragma omp single
-	{
 		if (n < threshold) {
 		// no more recursion; sort what's here and return it
 		sort(&arr[0], &arr[n]);
@@ -75,59 +73,59 @@ int* msort_recursive(int* arr, size_t n, size_t threshold) {
 			int half = n / 2;
 			bool uneven = n % 2 == 1;
 
-				int* left;
-				int* right;
+			int* left = (int*)malloc(sizeof(int) * half);
+			int* right = (int*)malloc(sizeof(int) * (uneven ? half + 1 : half));
 
-#pragma omp task depend (out: left)
+			#pragma omp parallel
+			{
+				#pragma omp single
 				{
+					#pragma omp task shared(left)
 					left = msort_recursive(arr, half, threshold);
-				}
 
-#pragma omp task depend (out: right)
-				{
+					#pragma omp task shared(right)
 					if (uneven) right = msort_recursive(&arr[half], half + 1, threshold);
 					else right = msort_recursive(&arr[half], half, threshold);
 				}
-
-#pragma omp task depend (in: left, right) (out: arr)
-				{
-					int* sorted;
-					sorted = (int*)malloc(sizeof(int) * n);
-
-					// merge time
-					int l = 0, r = 0;
-					for (int i = 0; i < n; i++) {
-						if (l < half && ((r < half + 1 && uneven) || (r < half && !uneven))) {
-							if (left[l] < right[r]) {
-								sorted[i] = left[l];
-								l++;
-							}
-							else {
-								sorted[i] = right[r];
-								r++;
-							}
-						}
-						else if (l < half) {
-							sorted[i] = left[l];
-							l++;
-						}
-						else {
-							sorted[i] = right[r];
-							r++;
-						}
-					}
-
-					for (int i = 0; i < n; i++) arr[i] = sorted[i];
-
-					free(sorted);
-				}
-			
-			#pragma omp task depend (in: arr)
-			{
-				return arr;
 			}
+			
+
+			#pragma omp taskwait
+
+			int* sorted;
+			sorted = (int*)malloc(sizeof(int) * n);
+
+			// merge time
+			int l = 0, r = 0;
+			for (int i = 0; i < n; i++) {
+				if (l < half && ((r < half + 1 && uneven) || (r < half && !uneven))) {
+					if (left[l] < right[r]) {
+						sorted[i] = left[l];
+						l++;
+					}
+					else {
+						sorted[i] = right[r];
+						r++;
+					}
+				}
+				else if (l < half) {
+					sorted[i] = left[l];
+					l++;
+				}
+				else {
+					sorted[i] = right[r];
+					r++;
+				}
+			}
+
+			for (int i = 0; i < n; i++) arr[i] = sorted[i];
+
+			free(left);
+			free(right);
+			free(sorted);
+			
+			return arr;
 		}
-	}
 }
 
 void msort(int* arr, size_t n, size_t threshold) {
