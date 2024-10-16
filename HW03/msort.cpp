@@ -96,7 +96,6 @@ int* msort_recursive(int* arr, size_t n, size_t threshold) {
 
 		// merge time
 		int l = 0, r = 0;
-		#pragma omp parallel for
 		for (int i = 0; i < n; i++) {
 			if (l < half && ((r < half + 1 && uneven) || (r < half && !uneven))) {
 				if (left[l] < right[r]) {
@@ -118,7 +117,6 @@ int* msort_recursive(int* arr, size_t n, size_t threshold) {
 			}
 		}
 
-		#pragma omp parallel for
 		for (int i = 0; i < n; i++) arr[i] = sorted[i];
 
 		// trying to free left and right causes errors...
