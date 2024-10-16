@@ -88,7 +88,7 @@ int* msort_recursive(int* arr, size_t n, size_t threshold) {
 				else right = msort_recursive(&arr[half], half, threshold);
 			}
 
-#pragma opm task depend (in: left, right)
+#pragma omp task depend (in: left, right)
 			{
 				int* sorted;
 				sorted = (int*)malloc(sizeof(int) * n);
