@@ -78,19 +78,19 @@ int* msort_recursive(int* arr, size_t n, size_t threshold) {
 			int* left;
 			int* right;
 
-#pragma omp task depend {out: left}
+#pragma omp task depend (out: left)
 			left = msort_recursive(arr, half, threshold);
-#pragma omp task depend {out: right}
+#pragma omp task depend (out: right)
 			{
 				if (uneven) right = msort_recursive(&arr[half], half + 1, threshold);
 				else right = msort_recursive(&arr[half], half, threshold);
 			}
 
-#pragma opm task depend {in: left, right}
+#pragma opm task depend (in: left, right)
 			{
 				int* sorted;
 				sorted = (int*)malloc(sizeof(int) * n);
-	
+
 				// merge time
 				int l = 0, r = 0;
 				for (int i = 0; i < n; i++) {
@@ -113,9 +113,9 @@ int* msort_recursive(int* arr, size_t n, size_t threshold) {
 						r++;
 					}
 				}
-	
+
 				for (int i = 0; i < n; i++) arr[i] = sorted[i];
-	
+
 				free(sorted);
 			}
 			
