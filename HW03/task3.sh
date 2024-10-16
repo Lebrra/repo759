@@ -16,6 +16,6 @@ two=1
 for ((i=1; i<=10; i++)) 
     do 
         two=$(($two*2));
-        ./task3 $ten 8 $two; 
+        ./task3 10 8 $two; 
         echo "------------------------";
     done
