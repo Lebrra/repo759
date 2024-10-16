@@ -50,6 +50,10 @@ int main(int argc, char* argv[])
 		cout << "first element:  \t" << arrayToSort[0] << endl;
 		cout << "last element:   \t" << arrayToSort[n - 1] << endl;
 	}
-	
+	else {
+		cout << "Error allocating array for msort!\n";
+		cout << "(n=" << n << ", t=" << t << ", ts=" << ts << ")\n";
+	}
+
 	free(arrayToSort);
 }
