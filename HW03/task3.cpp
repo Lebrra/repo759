@@ -38,16 +38,19 @@ int main(int argc, char* argv[])
 	// setting thread count this way works but declaring it below isn't for some reason...
 	omp_set_num_threads(t);
 
-	if (arrayToSort) {
-		msort(arrayToSort, n, ts);
+#pragma omp parallel num_threads(t)
+	{
+		if (arrayToSort) {
+			msort(arrayToSort, n, ts);
 
-		auto end = chrono::steady_clock::now();
-		auto timePassed = chrono::duration_cast<std::chrono::microseconds>(end - start);
+			auto end = chrono::steady_clock::now();
+			auto timePassed = chrono::duration_cast<std::chrono::microseconds>(end - start);
 
-		cout << "Results: (n=" << n << ", t=" << t << ", ts=" << ts << ")\n";
-		cout << "time to process:\t" << (timePassed.count() / 1000) << " milliseconds\n";
-		cout << "first element:  \t" << arrayToSort[0] << endl;
-		cout << "last element:   \t" << arrayToSort[n - 1] << endl;
+			cout << "Results: (n=" << n << ", t=" << t << ", ts=" << ts << ")\n";
+			cout << "time to process:\t" << (timePassed.count() / 1000) << " milliseconds\n";
+			cout << "first element:  \t" << arrayToSort[0] << endl;
+			cout << "last element:   \t" << arrayToSort[n - 1] << endl;
+		}
 	}
 
 	free(arrayToSort);
