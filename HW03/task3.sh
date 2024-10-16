@@ -20,7 +20,7 @@ if ($1 == 1) then
         ./task3 $ten 8 $two; 
         echo "------------------------";
     done
-else then
+else
     ten=1
     two=1
     for ((i=0; i<6; i++)) do ten=$(($ten*10)); done
