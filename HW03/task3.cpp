@@ -38,8 +38,8 @@ int main(int argc, char* argv[])
 	// setting thread count this way works but declaring it below isn't for some reason...
 	omp_set_num_threads(t);
 
-#pragma omp parallel num_threads(t)
-	{
+//#pragma omp parallel num_threads(t)
+//	{
 		if (arrayToSort) {
 			msort(arrayToSort, n, ts);
 
@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
 			cout << "first element:  \t" << arrayToSort[0] << endl;
 			cout << "last element:   \t" << arrayToSort[n - 1] << endl;
 		}
-	}
+//	}
 
 	free(arrayToSort);
 }
