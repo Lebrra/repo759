@@ -87,24 +87,14 @@ int* msort_recursive(int* arr, size_t n, size_t threshold) {
 			}
 
 #pragma opm taskwait
-			{
-				int* sorted;
-				sorted = (int*)malloc(sizeof(int) * n);
+			int* sorted;
+			sorted = (int*)malloc(sizeof(int) * n);
 
-				// merge time
-				int l = 0, r = 0;
-				for (int i = 0; i < n; i++) {
-					if (l < half && ((r < half + 1 && uneven) || (r < half && !uneven))) {
-						if (left[l] < right[r]) {
-							sorted[i] = left[l];
-							l++;
-						}
-						else {
-							sorted[i] = right[r];
-							r++;
-						}
-					}
-					else if (l < half) {
+			// merge time
+			int l = 0, r = 0;
+			for (int i = 0; i < n; i++) {
+				if (l < half && ((r < half + 1 && uneven) || (r < half && !uneven))) {
+					if (left[l] < right[r]) {
 						sorted[i] = left[l];
 						l++;
 					}
@@ -113,11 +103,19 @@ int* msort_recursive(int* arr, size_t n, size_t threshold) {
 						r++;
 					}
 				}
-
-				for (int i = 0; i < n; i++) arr[i] = sorted[i];
-
-				free(sorted);
+				else if (l < half) {
+					sorted[i] = left[l];
+					l++;
+				}
+				else {
+					sorted[i] = right[r];
+					r++;
+				}
 			}
+
+			for (int i = 0; i < n; i++) arr[i] = sorted[i];
+
+			free(sorted);
 		}
 
 		return arr;
