@@ -12,7 +12,7 @@ date
 ten=1
 two=1
 for ((i=0; i<6; i++)) do ten=$(($ten*10)); done
-for ((i=0; i<7; i++)) do two=$(($two*2)); done
+for ((i=0; i<6; i++)) do two=$(($two*2)); done
 
 for ((t=1; t<=20; t++)) 
     do 
