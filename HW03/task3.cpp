@@ -39,7 +39,6 @@ int main(int argc, char* argv[])
 	omp_set_num_threads(t);
 
 	if (arrayToSort) {
-		#pragma omp parallel
 		msort(arrayToSort, n, ts);
 
 		auto end = chrono::steady_clock::now();
