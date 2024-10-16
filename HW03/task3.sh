@@ -9,13 +9,5 @@
 g++ task3.cpp msort.cpp -Wall -O3 -std=c++17 -o task3 -fopenmp
 date
 
-ten=1
-two=1
-for ((i=0; i<6; i++)) do pow=$(($ten*10)); done
-for ((i=1; i<=10; i++)) 
-do 
-    two=$(($two*2));
-    
-done
 
 ./task3 6 8 2; 
