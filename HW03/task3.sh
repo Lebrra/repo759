@@ -15,6 +15,6 @@ for ((i=0; i<6; i++)) do pow=$(($ten*10)); done
 for ((i=1; i<=10; i++)) 
 do 
     two=$(($two*2));
-    ./task3 20 8 $two; 
+    ./task3 $ten 8 $two; 
     echo "------------------------";
 done
