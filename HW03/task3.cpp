@@ -48,6 +48,7 @@ int main(int argc, char* argv[])
 		cout << "time to process:\t" << (timePassed.count() / 1000) << " milliseconds\n";
 		cout << "first element:  \t" << arrayToSort[0] << endl;
 		cout << "last element:   \t" << arrayToSort[n - 1] << endl;
+		cout << "last 3 elements:   \t" << arrayToSort[n - 3] << ",  " << arrayToSort[n - 2] << ",  " << arrayToSort[n - 1] << endl;
 	}
 	else {
 		cout << "Error allocating array for msort!\n";
