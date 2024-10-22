@@ -9,4 +9,4 @@
 g++ task2.cpp -Wall -O3 -std=c++17 -o task2
 date
 
-./task2 10 10
+./task2 100 10
