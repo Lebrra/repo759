@@ -89,138 +89,142 @@ int main(int argc, char* argv[]) {
     int num_threads = std::atoi(argv[3]);
 
     omp_set_num_threads(num_threads);
-
-    // File to save positions
-    std::string filename = "positions.csv";
-
-    // Clear the file before starting simulation (optional)
-    std::ofstream file;
-    file.open(filename, std::ofstream::out | std::ofstream::trunc);
-    file.close();
-
-    // Allocate dynamic arrays based on N
-    double* mass = new double[N];
-    double(*pos)[3] = new double[N][3];
-    double(*vel)[3] = new double[N][3];
-    double(*acc)[3] = new double[N][3];
-
-    // Create a random number engine
-    std::mt19937 generator(std::random_device{}());
-
-    // Create random distributions
-    std::uniform_real_distribution<double> uniform_dist(0.0, 1.0);
-    std::normal_distribution<double> normal_dist(0.0, 1.0);
-
-    // Simulation parameters
-    double t = 0.0;
-
-    // Set initial masses and random positions/velocities
-#pragma omp parallel for collapse(2)
+#pragma omp parallel num_threads(t)
     {
-        for (int i = 0; i < N; i++) {
-            mass[i] = uniform_dist(generator);
+        // File to save positions
+        std::string filename = "positions.csv";
 
-            for (int j = 0; j < 3; j++) {
-                pos[i][j] = normal_dist(generator);
-                vel[i][j] = normal_dist(generator);
+        // Clear the file before starting simulation (optional)
+        std::ofstream file;
+        file.open(filename, std::ofstream::out | std::ofstream::trunc);
+        file.close();
+
+        // Allocate dynamic arrays based on N
+        double* mass = new double[N];
+        double(*pos)[3] = new double[N][3];
+        double(*vel)[3] = new double[N][3];
+        double(*acc)[3] = new double[N][3];
+
+        // Create a random number engine
+        std::mt19937 generator(std::random_device{}());
+
+        // Create random distributions
+        std::uniform_real_distribution<double> uniform_dist(0.0, 1.0);
+        std::normal_distribution<double> normal_dist(0.0, 1.0);
+
+        // Simulation parameters
+        double t = 0.0;
+
+        // Set initial masses and random positions/velocities
+#pragma omp parallel for collapse(2)
+        {
+            for (int i = 0; i < N; i++) {
+                mass[i] = uniform_dist(generator);
+
+                for (int j = 0; j < 3; j++) {
+                    pos[i][j] = normal_dist(generator);
+                    vel[i][j] = normal_dist(generator);
+                }
             }
         }
-    }
 
 
-    // Convert to Center-of-Mass frame
-    double velCM[3] = { 0.0, 0.0, 0.0 };
-    double totalMass = 0.0;
+        // Convert to Center-of-Mass frame
+        double velCM[3] = { 0.0, 0.0, 0.0 };
+        double totalMass = 0.0;
 #pragma omp parallel for collapse(2)
-    {
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < 3; j++) {
-                velCM[0] += vel[i][j] * mass[i];
+        {
+            for (int i = 0; i < N; i++) {
+                for (int j = 0; j < 3; j++) {
+                    velCM[0] += vel[i][j] * mass[i];
+                }
+                totalMass += mass[i];
             }
-            totalMass += mass[i];
         }
-    }
 
-    velCM[0] /= totalMass;
-    velCM[1] /= totalMass;
-    velCM[2] /= totalMass;
+        velCM[0] /= totalMass;
+        velCM[1] /= totalMass;
+        velCM[2] /= totalMass;
 
 #pragma omp parallel for
-    {
-        for (int i = 0; i < N; i++) {
-            vel[i][0] -= velCM[0];
-            vel[i][1] -= velCM[1];
-            vel[i][2] -= velCM[2];
-        }
-    }
-
-    // Initial accelerations
-    getAcc(pos, mass, acc, N);
-
-    // Number of timesteps
-    int Nt = int(tEnd / dt);
-
-    // Main simulation loop
-    for (int step = 0; step < Nt; step++) {
-
-        // 1/2 kick
-#pragma omp parallel for collapse(2)
         {
             for (int i = 0; i < N; i++) {
-                for (int j = 0; j < 3; j++) {
-                    vel[i][j] += acc[i][j] * dt / 2.0;
-                }
+                vel[i][0] -= velCM[0];
+                vel[i][1] -= velCM[1];
+                vel[i][2] -= velCM[2];
             }
         }
 
-        // Drift 
-#pragma omp parallel for collapse(2)
-        {
-            for (int i = 0; i < N; i++) {
-                for (int j = 0; j < 3; j++) {
-                    pos[i][j] += vel[i][j] * dt;
-                }
-            }
-        }
-
-        // Ensure particles stay within the board limits
-#pragma omp parallel for collapse(2)
-        {
-            for (int i = 0; i < N; i++) {
-                for (int j = 0; j < 3; j++) {
-                    if (pos[i][j] > board_size) pos[i][j] = board_size;
-                    else if (pos[i][j] < -board_size) pos[i][j] = -board_size;
-                }
-            }
-        }
-        
-
-        // Update accelerations
+        // Initial accelerations
         getAcc(pos, mass, acc, N);
 
-        // (1/2) kick
-#pragma omp parallel collapse(2)
-        {
-            for (int i = 0; i < N; i++) {
-                for (int j = 0; j < 3; j++) {
-                    vel[i][j] += acc[i][j] * dt / 2.0;
+        // Number of timesteps
+        int Nt = int(tEnd / dt);
+
+        // Main simulation loop
+        for (int step = 0; step < Nt; step++) {
+
+            // 1/2 kick
+#pragma omp parallel for collapse(2)
+            {
+                for (int i = 0; i < N; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        vel[i][j] += acc[i][j] * dt / 2.0;
+                    }
                 }
             }
+
+            // Drift 
+#pragma omp parallel for collapse(2)
+            {
+                for (int i = 0; i < N; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        pos[i][j] += vel[i][j] * dt;
+                    }
+                }
+            }
+
+            // Ensure particles stay within the board limits
+#pragma omp parallel for collapse(2)
+            {
+                for (int i = 0; i < N; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        if (pos[i][j] > board_size) pos[i][j] = board_size;
+                        else if (pos[i][j] < -board_size) pos[i][j] = -board_size;
+                    }
+                }
+            }
+            
+
+            // Update accelerations
+            getAcc(pos, mass, acc, N);
+
+            // (1/2) kick
+#pragma omp parallel collapse(2)
+            {
+                for (int i = 0; i < N; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        vel[i][j] += acc[i][j] * dt / 2.0;
+                    }
+                }
+            }
+            
+
+            // Update time
+            t += dt;
+
+            // For debug: save positions to CSV at each step
+            //savePositionsToCSV(pos, N, step, filename);
         }
-        
 
-        // Update time
-        t += dt;
+        // Clean up dynamically allocated memory
+        delete[] mass;
+        delete[] pos;
+        delete[] vel;
+        delete[] acc;
 
-        // For debug: save positions to CSV at each step
-        //savePositionsToCSV(pos, N, step, filename);
+
     }
-
-    // Clean up dynamically allocated memory
-    delete[] mass;
-    delete[] pos;
-    delete[] vel;
-    delete[] acc;
 
     end = high_resolution_clock::now();
     duration_sec = std::chrono::duration_cast<duration<double, std::milli>>(end - start);
