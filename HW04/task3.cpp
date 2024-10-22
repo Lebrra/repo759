@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
     int num_threads = std::atoi(argv[3]);
 
     omp_set_num_threads(num_threads);
-#pragma omp parallel num_threads(t)
+#pragma omp parallel num_threads(num_threads)
     {
         // File to save positions
         std::string filename = "positions.csv";
@@ -200,7 +200,7 @@ int main(int argc, char* argv[]) {
             getAcc(pos, mass, acc, N);
 
             // (1/2) kick
-#pragma omp parallel collapse(2)
+#pragma omp parallel for collapse(2)
             {
                 for (int i = 0; i < N; i++) {
                     for (int j = 0; j < 3; j++) {
