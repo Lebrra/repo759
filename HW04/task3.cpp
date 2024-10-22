@@ -30,6 +30,7 @@ void getAcc(const double pos[][3], const double mass[], double acc[][3], int N) 
         }
 
     // now generate new acc values:
+#pragma omp parallel for collapse(2)
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
             if (i != j) {
@@ -154,6 +155,7 @@ int main(int argc, char* argv[]) {
         int Nt = int(tEnd / dt);
 
         // Main simulation loop
+#pragma omp parallel for
         for (int step = 0; step < Nt; step++) {
 
             // 1/2 kick
