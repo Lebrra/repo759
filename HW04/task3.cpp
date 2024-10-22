@@ -76,8 +76,8 @@ int main(int argc, char* argv[]) {
     start = high_resolution_clock::now();
 
     // Check if correct number of arguments are provided
-    if (argc != 3) {
-        std::cerr << "Usage: " << argv[0] << " <number_of_particles> <simulation_end_time>" << std::endl;
+    if (argc != 4) {
+        std::cerr << "Usage: " << argv[0] << " <number_of_particles> <simulation_end_time> <num_threads>" << std::endl;
         return 1;
     }
 
