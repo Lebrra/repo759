@@ -23,13 +23,11 @@ void getAcc(const double pos[][3], const double mass[], double acc[][3], int N) 
 
     // first reset all acc values to 0:
 #pragma omp parallel for collapse(2)
-    {
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < 3; j++) {
                 acc[i][j] = 0;
             }
         }
-    }
 
     // now generate new acc values:
     for (int i = 0; i < N; i++) {
@@ -117,7 +115,6 @@ int main(int argc, char* argv[]) {
 
         // Set initial masses and random positions/velocities
 #pragma omp parallel for collapse(2)
-        {
             for (int i = 0; i < N; i++) {
                 mass[i] = uniform_dist(generator);
 
@@ -126,34 +123,29 @@ int main(int argc, char* argv[]) {
                     vel[i][j] = normal_dist(generator);
                 }
             }
-        }
 
 
         // Convert to Center-of-Mass frame
         double velCM[3] = { 0.0, 0.0, 0.0 };
         double totalMass = 0.0;
 #pragma omp parallel for collapse(2)
-        {
             for (int i = 0; i < N; i++) {
                 for (int j = 0; j < 3; j++) {
                     velCM[0] += vel[i][j] * mass[i];
                 }
                 totalMass += mass[i];
             }
-        }
 
         velCM[0] /= totalMass;
         velCM[1] /= totalMass;
         velCM[2] /= totalMass;
 
 #pragma omp parallel for
-        {
             for (int i = 0; i < N; i++) {
                 vel[i][0] -= velCM[0];
                 vel[i][1] -= velCM[1];
                 vel[i][2] -= velCM[2];
             }
-        }
 
         // Initial accelerations
         getAcc(pos, mass, acc, N);
@@ -166,34 +158,28 @@ int main(int argc, char* argv[]) {
 
             // 1/2 kick
 #pragma omp parallel for collapse(2)
-            {
                 for (int i = 0; i < N; i++) {
                     for (int j = 0; j < 3; j++) {
                         vel[i][j] += acc[i][j] * dt / 2.0;
                     }
                 }
-            }
 
             // Drift 
 #pragma omp parallel for collapse(2)
-            {
                 for (int i = 0; i < N; i++) {
                     for (int j = 0; j < 3; j++) {
                         pos[i][j] += vel[i][j] * dt;
                     }
                 }
-            }
 
             // Ensure particles stay within the board limits
 #pragma omp parallel for collapse(2)
-            {
                 for (int i = 0; i < N; i++) {
                     for (int j = 0; j < 3; j++) {
                         if (pos[i][j] > board_size) pos[i][j] = board_size;
                         else if (pos[i][j] < -board_size) pos[i][j] = -board_size;
                     }
                 }
-            }
             
 
             // Update accelerations
@@ -201,13 +187,11 @@ int main(int argc, char* argv[]) {
 
             // (1/2) kick
 #pragma omp parallel for collapse(2)
-            {
                 for (int i = 0; i < N; i++) {
                     for (int j = 0; j < 3; j++) {
                         vel[i][j] += acc[i][j] * dt / 2.0;
                     }
                 }
-            }
             
 
             // Update time
@@ -222,8 +206,6 @@ int main(int argc, char* argv[]) {
         delete[] pos;
         delete[] vel;
         delete[] acc;
-
-
     }
 
     end = high_resolution_clock::now();
