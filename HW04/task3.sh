@@ -9,4 +9,7 @@
 g++ task3.cpp -Wall -O3 -std=c++17 -o task3 -fopenmp
 date
 
-./task3 100 10 8
+for ((t=1; t<=8; t++)) 
+do
+./task3 100 10 $t
+done
