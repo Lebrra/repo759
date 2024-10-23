@@ -11,5 +11,5 @@ date
 
 for ((t=1; t<=8; t++)) 
 do
-./task4 100 10 $t
+./task4 100 100 $t
 done
