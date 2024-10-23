@@ -88,7 +88,7 @@ int main(int argc, char* argv[]) {
     int num_threads = std::atoi(argv[3]);
 
     omp_set_num_threads(num_threads);
-#pragma omp parallel num_threads(num_threads)
+#pragma omp parallel
     {
         // File to save positions
         std::string filename = "positions.csv";
