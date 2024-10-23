@@ -88,8 +88,8 @@ int main(int argc, char* argv[]) {
     int num_threads = std::atoi(argv[3]);
 
     omp_set_num_threads(num_threads);
-//#pragma omp parallel num_threads(num_threads)
-//    {
+#pragma omp parallel num_threads(num_threads)
+    {
         // File to save positions
         std::string filename = "positions.csv";
 
@@ -204,7 +204,7 @@ int main(int argc, char* argv[]) {
 
             // For debug: save positions to CSV at each step
             //savePositionsToCSV(pos, N, step, filename);
-//        }
+        }
 
         // Clean up dynamically allocated memory
         delete[] mass;
