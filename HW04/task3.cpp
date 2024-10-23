@@ -85,10 +85,10 @@ int main(int argc, char* argv[]) {
     // Read N and tEnd from command line
     int N = std::atoi(argv[1]);     // Number of particles
     double tEnd = std::atoi(argv[2]); // Time at which simulation ends
-    int num_threads = std::atoi(argv[3]);
+    int t = std::atoi(argv[3]);
 
-    omp_set_num_threads(num_threads);
-#pragma omp parallel
+    omp_set_num_threads(t);
+#pragma omp.h parallel num_threads(t)
     {
         // File to save positions
         std::string filename = "positions.csv";
@@ -215,7 +215,7 @@ int main(int argc, char* argv[]) {
 
     end = high_resolution_clock::now();
     duration_sec = std::chrono::duration_cast<duration<double, std::milli>>(end - start);
-    std::cout << "threads: " << omp_get_num_threads() << "\n";
+    std::cout << "threads: " << omp_get_num_threads() << "(t=" << t << ")\n";
     std::cout << "time: " << duration_sec.count() << "ms\n";
     std::cout << std::endl;
 
