@@ -22,11 +22,11 @@ const double board_size = 4.0; // Size of the board
 void getAcc(const double pos[][3], const double mass[], double acc[][3], int N) {
 
     // first reset all acc values to 0:
-#pragma omp parallel for collapse(2)
+#pragma omp parallel for
         for (int i = 0; i < N; i++) {
-            for (int j = 0; j < 3; j++) {
-                acc[i][j] = 0;
-            }
+            acc[i][0] = 0;
+            acc[i][1] = 0;
+            acc[i][2] = 0;
         }
 
     // now generate new acc values:
@@ -115,27 +115,31 @@ int main(int argc, char* argv[]) {
         double t = 0.0;
 
         // Set initial masses and random positions/velocities
-#pragma omp parallel for collapse(2)
+#pragma omp parallel
             for (int i = 0; i < N; i++) {
                 mass[i] = uniform_dist(generator);
 
-                for (int j = 0; j < 3; j++) {
-                    pos[i][j] = normal_dist(generator);
-                    vel[i][j] = normal_dist(generator);
-                }
+                pos[i][0] = normal_dist(generator);
+                pos[i][1] = normal_dist(generator);
+                pos[i][2] = normal_dist(generator);
+
+                vel[i][0] = normal_dist(generator);
+                vel[i][1] = normal_dist(generator);
+                vel[i][2] = normal_dist(generator);
             }
+
 
 
         // Convert to Center-of-Mass frame
         double velCM[3] = { 0.0, 0.0, 0.0 };
         double totalMass = 0.0;
-#pragma omp parallel for collapse(2)
-            for (int i = 0; i < N; i++) {
-                for (int j = 0; j < 3; j++) {
-                    velCM[0] += vel[i][j] * mass[i];
-                }
-                totalMass += mass[i];
-            }
+#pragma omp parallel for
+        for (int i = 0; i < N; i++) {
+            velCM[0] += vel[i][0] * mass[i];
+            velCM[1] += vel[i][1] * mass[i];
+            velCM[2] += vel[i][2] * mass[i];
+            totalMass += mass[i];
+        }
 
         velCM[0] /= totalMass;
         velCM[1] /= totalMass;
@@ -160,28 +164,28 @@ int main(int argc, char* argv[]) {
 
             // 1/2 kick
 #pragma omp parallel for collapse(2)
-                for (int i = 0; i < N; i++) {
-                    for (int j = 0; j < 3; j++) {
-                        vel[i][j] += acc[i][j] * dt / 2.0;
-                    }
-                }
+            for (int i = 0; i < N; i++) {
+                vel[i][0] += acc[i][0] * dt / 2.0;
+                vel[i][1] += acc[i][1] * dt / 2.0;
+                vel[i][2] += acc[i][2] * dt / 2.0;
+            }
 
             // Drift 
 #pragma omp parallel for collapse(2)
-                for (int i = 0; i < N; i++) {
-                    for (int j = 0; j < 3; j++) {
-                        pos[i][j] += vel[i][j] * dt;
-                    }
-                }
+            for (int i = 0; i < N; i++) {
+                pos[i][0] += vel[i][0] * dt;
+                pos[i][1] += vel[i][1] * dt;
+                pos[i][2] += vel[i][2] * dt;
+            }
 
             // Ensure particles stay within the board limits
 #pragma omp parallel for collapse(2)
-                for (int i = 0; i < N; i++) {
-                    for (int j = 0; j < 3; j++) {
-                        if (pos[i][j] > board_size) pos[i][j] = board_size;
-                        else if (pos[i][j] < -board_size) pos[i][j] = -board_size;
-                    }
+            for (int i = 0; i < N; i++) {
+                for (int j = 0; j < 3; j++) {
+                    if (pos[i][j] > board_size) pos[i][j] = board_size;
+                    else if (pos[i][j] < -board_size) pos[i][j] = -board_size;
                 }
+            }
             
 
             // Update accelerations
@@ -189,12 +193,11 @@ int main(int argc, char* argv[]) {
 
             // (1/2) kick
 #pragma omp parallel for collapse(2)
-                for (int i = 0; i < N; i++) {
-                    for (int j = 0; j < 3; j++) {
-                        vel[i][j] += acc[i][j] * dt / 2.0;
-                    }
-                }
-            
+            for (int i = 0; i < N; i++) {
+                vel[i][0] += acc[i][0] * dt / 2.0;
+                vel[i][1] += acc[i][1] * dt / 2.0;
+                vel[i][2] += acc[i][2] * dt / 2.0;
+            }
 
             // Update time
             t += dt;
