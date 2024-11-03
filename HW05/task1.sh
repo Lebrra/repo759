@@ -8,7 +8,7 @@
 #SBATCH --gpus-per-task=1
 
 module load nvidia/cuda
-g++ nvcc task1.cu -Xcompiler -O3 -Xcompiler -Wall -Xptxas -O3 -std=c++17 -o task1
+nvcc task1.cu -Xcompiler -O3 -Xcompiler -Wall -Xptxas -O3 -std=c++17 -o task1
 date
 
 ./task1
