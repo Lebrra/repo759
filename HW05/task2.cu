@@ -3,7 +3,7 @@
 using namespace std;
 
 __global__ void algebraKernel(int* dA, int a) { 
-    int index = threadIdx.x * (1 + blockIdx.x) + blockIdx.x;
+    int index = threadIdx.x + blockIdx.x * 8;
     printf("index = %d | x = %d | y = %d \n", index, threadIdx.x, blockIdx.x);
     dA[index] = threadIdx.x * a + blockIdx.x;
 }
