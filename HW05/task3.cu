@@ -4,10 +4,14 @@
 #include "vscale.cuh"
 using namespace std;
 
-__global__ void arrayInit(float *a, uniform_real_distribution<float> r, mt19937 g, int n){
+__global__ void arrayInit(float *a, int n, float min, float max){
     int index = threadIdx.x + blockIdx.x * 512;
     if (index < n) {
-        a[index] = r(g);
+        random_device entropy_source;
+        mt19937 generator(entropy_source());
+        uniform_real_distribution<float> dist(min, max);
+
+        a[index] = dist(generator);
     }
 }
 
@@ -21,18 +25,18 @@ int main(int argc, char* argv[]) {
     printf("threads = %d | blocks = %d\n", t, b);
 
     // randomization:
-    random_device entropy_source;
-    mt19937 generator(entropy_source());
-    uniform_real_distribution<float> distA(0., 20.);
-    uniform_real_distribution<float> distB(0., 1.);
+    //random_device entropy_source;
+    //mt19937 generator(entropy_source());
+    //uniform_real_distribution<float> distA(0., 20.);
+    //uniform_real_distribution<float> distB(0., 1.);
 
     // array initialization:
     cudaMalloc((void**)&dA, sizeof(float) * n);
     cudaMemset(dA, 0, n * sizeof(float));
     cudaMalloc((void**)&dB, sizeof(float) * n);
     cudaMemset(dB, 0, n * sizeof(float));
-    arrayInit<<<b, t>>>(dA, distA, generator, n);
-    arrayInit<<<b, t>>>(dB, distB, generator, n);
+    arrayInit<<<b, t>>>(dA, n, 0., 20.);
+    arrayInit<<<b, t>>>(dB, n, 0., 1.);
     cudaDeviceSynchronize();
 
     // do math:
