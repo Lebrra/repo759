@@ -23,6 +23,10 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < n; i++){
         dA[i] = static_cast <float> (rand() / static_cast <float> (RAND_MAX / 20)) - 10;
         dB[i] = static_cast <float> (rand() / static_cast <float> (RAND_MAX / 2)) - 1;
+
+        if (i < 5){
+            cout << " dA = " << dA[i] << " | dB = " << dB[i] << endl;
+        }
     }
 
     // do math:
