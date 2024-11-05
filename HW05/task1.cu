@@ -11,7 +11,6 @@ __global__ void factorialKernel() {
 }
 
 int main() {
-    printf("printing...\n");
     factorialKernel<<<1, 8>>>();
     cudaDeviceSynchronize();
     return 0;
