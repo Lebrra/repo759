@@ -1,5 +1,6 @@
 #include <cuda.h>
 #include <iostream>
+#include <random>
 using namespace std;
 
 __global__ void algebraKernel(int* dA, int a) { 
@@ -15,7 +16,9 @@ int main() {
     cudaMalloc((void**)&dA, sizeof(int) * n);
     cudaMemset(dA, 0, n * sizeof(int));
 
-    float r = static_cast <int> (rand() / static_cast <int> (RAND_MAX / 100)) - 50;
+    mt19937 generator(12354);
+    uniform_real_distribution<int> dist(0, 100);
+    auto r = dist(generator);
 
     algebraKernel<<<2, 8>>>(dA, r);
     cudaDeviceSynchronize();
