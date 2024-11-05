@@ -1,7 +1,8 @@
 #include <cuda.h>
 #include <stdio.h>
 
-__global__ void factorialKernel(int a) { 
+__global__ void factorialKernel() { 
+    int a = threadIdx.x;
     int b = 1;
     for (int i = 2; i <= a; i++) {
         b *= i;
@@ -11,9 +12,7 @@ __global__ void factorialKernel(int a) {
 
 int main() {
     printf("printing...\n");
-    for (int i = 1; i <= 8; i++){
-        factorialKernel<<<1, 8>>>(i);
-    }
+    factorialKernel<<<1, 8>>>();
     cudaDeviceSynchronize();
     return 0;
 }
