@@ -2,8 +2,16 @@
 #include <iostream>
 #include <random>
 #include "vscale.cuh"
-#include "vscale.cu"
 using namespace std;
+
+__global__ void vscaleInt(const float *a, float *b, unsigned int n){
+    int index = threadIdx.x + blockIdx.x * 512;
+    printf("index = %d | n = %d\n", index, n);
+    if (index < n) {
+        printf("a = %f | b = %f | a*b = %f \n", a[index], b[index], a[index] * b[index]);
+        b[index] *= a[index];
+    }
+}
 
 int main(int argc, char* argv[]) {
     int n = atoi(argv[1]);
@@ -30,7 +38,7 @@ int main(int argc, char* argv[]) {
     int b = (n + t - 1) / t;
     printf("threads = %d | blocks = %d\n", t, b);
 
-    vscale<<<b, t>>>(dA, dB, n);
+    vscaleInt<<<b, t>>>(dA, dB, n);
     cudaDeviceSynchronize();
 
     cudaMemcpy(&hB, dB, sizeof(float) * n, cudaMemcpyDeviceToHost);
