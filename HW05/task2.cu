@@ -11,7 +11,7 @@ __global__ void algebraKernel(int* dA, int a) {
 int main() {
     int n = 16;
     int hA[n], *dA;
-    //allocate memory on the device (GPU); zero out all entries in this device array
+
     cudaMalloc((void**)&dA, sizeof(int) * n);
     cudaMemset(dA, 0, n * sizeof(int));
 
