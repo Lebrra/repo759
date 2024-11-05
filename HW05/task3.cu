@@ -2,6 +2,7 @@
 #include <iostream>
 #include <random>
 #include "vscale.cuh"
+#include "vscale.cu"
 using namespace std;
 
 int main(int argc, char* argv[]) {
@@ -18,7 +19,7 @@ int main(int argc, char* argv[]) {
     cudaMemset(dA, 0, n * sizeof(float));
     cudaMalloc((void**)&dB, sizeof(float) * n);
     cudaMemset(dB, 0, n * sizeof(float));
-    
+
     // set dA and dB to random values:
     for(int i = 0; i < n; i++){
         dA[i] = distA(generator);
