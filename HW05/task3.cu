@@ -11,6 +11,13 @@ __global__ void arrayInit(float *a, int n, float min, float max){
         mt19937 generator(index);
         uniform_real_distribution<float> dist(min, max);
 
+        if (index == 0){
+            for(int i = 0; i < 10; i++){
+                float rand = dist(generator);
+                printf("%d = %f\n", i, rand);
+            }
+        }
+
         a[index] = dist(generator);
     }
 }
