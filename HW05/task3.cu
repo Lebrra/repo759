@@ -4,6 +4,15 @@
 #include "vscale.cuh"
 using namespace std;
 
+__global__ void vscaleInt(const float *a, float *b, unsigned int n){
+    int index = threadIdx.x + blockIdx.x * 512;
+    printf("index = %d | n = %d\n", index, n);
+    if (index < n) {
+        printf("a = %f | b = %f | a*b = %f \n", a[index], b[index], a[index] * b[index]);
+        b[index] *= a[index];
+    }
+}
+
 int main(int argc, char* argv[]) {
     int n = atoi(argv[1]);
 
@@ -20,7 +29,7 @@ int main(int argc, char* argv[]) {
     cudaMemset(dB, distB(generator), n * sizeof(float));
 
     int blocks = (n + 512 - 1) / 512;
-    vscale<<<blocks, 512>>>(dA, dB, n);
+    vscaleInt<<<blocks, 512>>>(dA, dB, n);
     cudaDeviceSynchronize();
 
     cudaMemcpy(&hB, dB, sizeof(float) * n, cudaMemcpyDeviceToHost);
