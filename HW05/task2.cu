@@ -16,8 +16,9 @@ int main() {
     cudaMalloc((void**)&dA, sizeof(int) * n);
     cudaMemset(dA, 0, n * sizeof(int));
 
-    mt19937 generator(12354);
-    uniform_int_distribution<int> dist(0., 100.);
+    auto seed = std::system_clock::now().time_since_epoch().count();
+    mt19937 generator(seed);
+    uniform_int_distribution<int> dist(0, 100);
     auto r = dist(generator);
 
     algebraKernel<<<2, 8>>>(dA, r);
