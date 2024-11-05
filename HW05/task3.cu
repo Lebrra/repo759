@@ -25,15 +25,15 @@ int main(int argc, char* argv[]) {
 
     cudaMalloc((void**)&dA, sizeof(float) * n);
     cudaMemset(dA, 0, n * sizeof(float));
-    cudaMalloc((void**)&dB, sizeof(float) * n);
-    cudaMemset(dB, 0, n * sizeof(float));
+    //cudaMalloc((void**)&dB, sizeof(float) * n);
+    //cudaMemset(dB, 0, n * sizeof(float));
 
     // set dA and dB to random values:
     for(int i = 0; i < n; i++){
         dA[i] = dist(generator);
-        dB[i] = dist(generator);
+        //dB[i] = dist(generator);
         if (i < 5) {
-            printf("a = %f | b = %f | a*b = %f \n", dA[i], dB[i], dA[i] * dB[i]);
+            printf("a = %f \n", dA[i]);
         }
     }
 
@@ -41,10 +41,10 @@ int main(int argc, char* argv[]) {
     int b = (n + t - 1) / t;
     printf("threads = %d | blocks = %d\n", t, b);
 
-    vscaleInt<<<b, t>>>(dA, dB, n);
+    vscaleInt<<<b, t>>>(dA, dA, n);
     cudaDeviceSynchronize();
 
-    cudaMemcpy(&hB, dB, sizeof(float) * n, cudaMemcpyDeviceToHost);
+    cudaMemcpy(&hB, dA, sizeof(float) * n, cudaMemcpyDeviceToHost);
 
     cout << "Results: " << endl;
     for (int i = 0; i < 5; i++) {
