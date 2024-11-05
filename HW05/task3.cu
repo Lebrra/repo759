@@ -7,8 +7,8 @@ using namespace std;
 __global__ void arrayInit(float *a, int n, float min, float max){
     int index = threadIdx.x + blockIdx.x * 512;
     if (index < n) {
-        random_device entropy_source;
-        mt19937 generator(entropy_source());
+        //random_device entropy_source;
+        mt19937 generator(index);
         uniform_real_distribution<float> dist(min, max);
 
         a[index] = dist(generator);
