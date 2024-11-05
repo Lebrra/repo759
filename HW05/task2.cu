@@ -4,7 +4,6 @@
 using namespace std;
 
 __global__ void algebraKernel(int* dA, int a) { 
-    printf("a = %d", a);
     int index = threadIdx.x + blockIdx.x * 8;
     dA[index] = threadIdx.x * a + blockIdx.x;
 }
