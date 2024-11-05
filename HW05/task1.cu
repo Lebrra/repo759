@@ -7,12 +7,12 @@ __global__ void factorialKernel(int a) {
     for (int i = a; i > 1; i++){
         b *= i;
     }
-    printf(b);
+    cout << b << endl;
     //printf("%d! = %d", a, b);
 }
 
 int main() {
-    printf("printing...\n")
+    printf("printing...\n");
     for (int i = 1; i <= 8; i++){
         factorialKernel<<<1, 8>>>(i);
     }
