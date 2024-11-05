@@ -6,7 +6,7 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
     int n = atoi(argv[1]);
-    float hB[n], hA[n], *dB, *dA;
+    float hB[n], *dB, *dA;
 
     // prepping threads and blocks:
     int t = 512;
