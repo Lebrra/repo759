@@ -4,10 +4,10 @@
 #include "vscale.cuh"
 using namespace std;
 
-__global__ void arrayInit(float *a, float r, int n){
+__global__ void arrayInit(float *a, uniform_real_distribution<float> r, mt19937 g, int n){
     int index = threadIdx.x + blockIdx.x * 512;
     if (index < n) {
-        a[index] = r;
+        a[index] = r(g);
     }
 }
 
@@ -31,8 +31,9 @@ int main(int argc, char* argv[]) {
     cudaMemset(dA, 0, n * sizeof(float));
     cudaMalloc((void**)&dB, sizeof(float) * n);
     cudaMemset(dB, 0, n * sizeof(float));
-    arrayInit<<<b, t>>>(dA, distA(generator), n);
-    arrayInit<<<b, t>>>(dB, distB(generator), n);
+    arrayInit<<<b, t>>>(dA, distA, generator, n);
+    arrayInit<<<b, t>>>(dB, distB, generator, n);
+    cudaDeviceSynchronize();
 
     // do math:
     vscale<<<b, t>>>(dA, dB, n);
