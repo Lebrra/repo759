@@ -6,7 +6,7 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
     int n = 16;
-    int hA[n], *dA;
+    float hA[n], *dA;
 
     cudaMalloc((void**)&dA, sizeof(float) * n);
     cudaMemset(dA, 5, n * sizeof(float));
