@@ -1,5 +1,5 @@
 #include <cuda.h>
-#include <vscale.cuh>
+#include <vscale.cu>
 #include <iostream>
 #include <random>
 using namespace std;
