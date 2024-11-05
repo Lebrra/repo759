@@ -16,8 +16,8 @@ int main() {
     cudaMalloc((void**)&dA, sizeof(int) * n);
     cudaMemset(dA, 0, n * sizeof(int));
 
-    auto seed = std::system_clock::now().time_since_epoch().count();
-    mt19937 generator(seed);
+    random_device entropy_source;
+    mt19937 generator(entropy_source());
     uniform_int_distribution<int> dist(0, 100);
     auto r = dist(generator);
 
