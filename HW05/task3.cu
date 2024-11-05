@@ -4,54 +4,27 @@
 #include "vscale.cuh"
 using namespace std;
 
-__global__ void vscaleInt(const float *a, float *b, unsigned int n){
-    int index = threadIdx.x + blockIdx.x * 512;
-    printf("index = %d | n = %d\n", index, n);
-    if (index < n) {
-        printf("a = %f | b = %f | a*b = %f \n", a[index], b[index], a[index] * b[index]);
-        b[index] *= a[index];
-    }
-}
-
 int main(int argc, char* argv[]) {
-    int n = atoi(argv[1]);
+    int n = 16;
+    int hA[n], *dA;
 
-    float hB[n], *dB, *dA;
+    cudaMalloc((void**)&dA, sizeof(float) * n);
+    cudaMemset(dA, 5, n * sizeof(float));
 
     random_device entropy_source;
     mt19937 generator(entropy_source());
-    uniform_real_distribution<float> dist(0., 20.);
-    //uniform_real_distribution<float> distB(0., 1.);
+    uniform_real_distribution<float> dist(0, 100);
+    auto r = dist(generator);
 
-    cudaMalloc((void**)&dA, sizeof(float) * n);
-    cudaMemset(dA, 0, n * sizeof(float));
-    //cudaMalloc((void**)&dB, sizeof(float) * n);
-    //cudaMemset(dB, 0, n * sizeof(float));
-
-    // set dA and dB to random values:
-    for(int i = 0; i < n; i++){
-        dA[i] = dist(generator);
-        //dB[i] = dist(generator);
-        if (i < 5) {
-            printf("a = %f \n", dA[i]);
-        }
-    }
-
-    int t = 512;
-    int b = (n + t - 1) / t;
-    printf("threads = %d | blocks = %d\n", t, b);
-
-    vscaleInt<<<b, t>>>(dA, dA, n);
+    vscale<<<2, 8>>>(dA, dA, n);
     cudaDeviceSynchronize();
 
-    cudaMemcpy(&hB, dA, sizeof(float) * n, cudaMemcpyDeviceToHost);
+    cudaMemcpy(&hA, dA, sizeof(float) * n, cudaMemcpyDeviceToHost);
 
     cout << "Results: " << endl;
-    for (int i = 0; i < 5; i++) {
-        cout << " hB = " << hB[i] << endl;
-    }
+    for (int i = 0; i < n; i++) cout << hA[i] << " ";
     cout << endl;
 
-    //cudaFree(dB);
+    cudaFree(dA);
     return 0;
 }
