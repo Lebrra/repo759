@@ -52,6 +52,6 @@ int main(int argc, char* argv[]) {
     }
     cout << endl;
 
-    cudaFree(dB);
+    //cudaFree(dB);
     return 0;
 }
