@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
         dA[i] = dist(generator);
         dB[i] = dist(generator);
         if (i < 5) {
-            printf("a = %f | b = %f | a*b = %f \n", dA[index], dB[index], dA[index] * dB[index]);
+            printf("a = %f | b = %f | a*b = %f \n", dA[i], dB[i], dA[i] * dB[i]);
         }
     }
 
