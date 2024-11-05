@@ -1,15 +1,8 @@
 #include <cuda.h>
 #include <iostream>
-#include <random>
+#include <chrono>
 #include "vscale.cuh"
 using namespace std;
-
-__global__ void arrayInit(float *a, int n){
-    int index = threadIdx.x + blockIdx.x * 512;
-    if (index < n) {
-        a[index] = dist(generator);
-    }
-}
 
 int main(int argc, char* argv[]) {
     int n = atoi(argv[1]);
@@ -21,28 +14,16 @@ int main(int argc, char* argv[]) {
     printf("threads = %d | blocks = %d\n", t, b);
 
     // randomization:
-    random_device entropy_source;
-    mt19937 generator(entropy_source());
-    uniform_real_distribution<float> distA(0., 20.);
-    uniform_real_distribution<float> distB(0., 1.);
+    srand(chrono::system_clock::now().time_since_epoch().count());
 
     // array initialization:
     dA = (float*)malloc(sizeof(float)*n);
     dB = (float*)malloc(sizeof(float)*n);
 
     for (int i = 0; i < n; i++){
-        dA[i] = distA(generator);
-        dB[i] = distB(generator);
+        dA[i] = static_cast <float> (rand() / static_cast <float> (RAND_MAX / 20)) - 10;
+        dB[i] = static_cast <float> (rand() / static_cast <float> (RAND_MAX / 2)) - 1;
     }
-
-    // cuda initialization:
-    //cudaMalloc((void**)&dA, sizeof(float) * n);
-    //cudaMemset(dA, 0, n * sizeof(float));
-    //cudaMalloc((void**)&dB, sizeof(float) * n);
-    //cudaMemset(dB, 0, n * sizeof(float));
-    //arrayInit<<<b, t>>>(dA, n, 0., 20.);
-    //arrayInit<<<b, t>>>(dB, n, 0., 1.);
-    //cudaDeviceSynchronize();
 
     // do math:
     vscale<<<b, t>>>(dA, dB, n);
