@@ -1,7 +1,7 @@
 #include <cuda.h>
-#include <vscale.cu>
 #include <iostream>
 #include <random>
+#include "vscale.cuh"
 using namespace std;
 
 int main(int argc, char* argv[]) {
