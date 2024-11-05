@@ -6,8 +6,8 @@ __global__ void factorialKernel(int a) {
     for (int i = a; i > 1; i++){
         b *= i;
     }
-    //printf("%d! = %d", a, b);
-    printf("print here \n");
+    printf("%d! = %d", a, b);
+    //printf("print here \n");
 }
 
 int main() {
