@@ -11,8 +11,8 @@ int main(int argc, char* argv[]) {
 
     random_device entropy_source;
     mt19937 generator(entropy_source());
-    uniform_float_distribution<float> distA(0., 20.);
-    uniform_float_distribution<float> distB(0., 1.);
+    uniform_real_distribution<float> distA(0., 20.);
+    uniform_real_distribution<float> distB(0., 1.);
 
     cudaMalloc((void**)&dA, sizeof(float) * n);
     cudaMemset(dA, distA(generator), n * sizeof(float));
@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
     }
 
     int blocks = (n + 512 - 1) / 512;
-    algebraKernel<<<blocks, 512>>>(dA, dB, n);
+    vscale<<<blocks, 512>>>(dA, dB, n);
     cudaDeviceSynchronize();
 
     cudaMemcpy(&hB, dB, sizeof(float) * n, cudaMemcpyDeviceToHost);
