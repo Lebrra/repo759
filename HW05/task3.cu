@@ -19,10 +19,6 @@ int main(int argc, char* argv[]) {
     cudaMalloc((void**)&dB, sizeof(float) * n);
     cudaMemset(dB, distB(generator), n * sizeof(float));
 
-    for (int i = 0; i < 5; i++) {
-        cout << dA[i] << " * " << dB[i] << endl;
-    }
-
     int blocks = (n + 512 - 1) / 512;
     vscale<<<blocks, 512>>>(dA, dB, n);
     cudaDeviceSynchronize();
@@ -31,7 +27,7 @@ int main(int argc, char* argv[]) {
 
     cout << "Results: " << endl;
     for (int i = 0; i < 5; i++) {
-        cout << " dB = " << dB[i] << endl;
+        cout << " dB = " << hB[i] << endl;
     }
     cout << endl;
 
