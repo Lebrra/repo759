@@ -11,9 +11,10 @@ __global__ void factorialKernel(int a) {
 
 int main() {
     printf("printing...\n");
-    for (int i = 1; i <= 8; i++){
-        factorialKernel<<<1, 8>>>(i);
-    }
+    //for (int i = 1; i <= 8; i++){
+    //    factorialKernel<<<1, 8>>>(i);
+    //}
+    factorialKernel<<<1, 8>>>(5);
     cudaDeviceSynchronize();
     return 0;
 }
