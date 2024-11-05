@@ -20,8 +20,8 @@ int main(int argc, char* argv[]) {
 
     random_device entropy_source;
     mt19937 generator(entropy_source());
-    uniform_real_distribution<float> distA(0., 20.);
-    uniform_real_distribution<float> distB(0., 1.);
+    uniform_real_distribution<float> dist(0., 20.);
+    //uniform_real_distribution<float> distB(0., 1.);
 
     cudaMalloc((void**)&dA, sizeof(float) * n);
     cudaMemset(dA, 0, n * sizeof(float));
@@ -30,8 +30,11 @@ int main(int argc, char* argv[]) {
 
     // set dA and dB to random values:
     for(int i = 0; i < n; i++){
-        dA[i] = distA(generator);
-        dB[i] = distB(generator);
+        dA[i] = dist(generator);
+        dB[i] = dist(generator);
+        if (i < 5) {
+            printf("a = %f | b = %f | a*b = %f \n", dA[index], dB[index], dA[index] * dB[index]);
+        }
     }
 
     int t = 512;
