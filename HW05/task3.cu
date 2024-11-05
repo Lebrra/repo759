@@ -28,8 +28,11 @@ int main(int argc, char* argv[]) {
     cudaMalloc((void**)&dB, sizeof(float) * n);
     cudaMemset(dB, distB(generator), n * sizeof(float));
 
-    int blocks = (n + 512 - 1) / 512;
-    vscaleInt<<<blocks, 512>>>(dA, dB, n);
+    int threads = 512;
+    int blocks = (n + threads - 1) / threads;
+    printf("threads = %d | blocks = %d\n", threads, blocks);
+
+    vscaleInt<<<blocks, threads>>>(dA, dB, n);
     cudaDeviceSynchronize();
 
     cudaMemcpy(&hB, dB, sizeof(float) * n, cudaMemcpyDeviceToHost);
