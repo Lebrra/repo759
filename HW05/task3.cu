@@ -9,7 +9,7 @@ int main(int argc, char* argv[]) {
     float hA[n], *dA;
 
     cudaMalloc((void**)&dA, sizeof(float) * n);
-    cudaMemset(dA, 5, n * sizeof(float));
+    cudaMemset(dA, 5., n * sizeof(float));
 
     random_device entropy_source;
     mt19937 generator(entropy_source());
