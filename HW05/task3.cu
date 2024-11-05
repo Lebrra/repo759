@@ -4,15 +4,6 @@
 #include "vscale.cuh"
 using namespace std;
 
-__global__ void vscaleInt(const float *a, float *b, unsigned int n){
-    int index = threadIdx.x + blockIdx.x * 512;
-    printf("index = %d | n = %d\n", index, n);
-    if (index < n) {
-        printf("a = %f | b = %f | a*b = %f \n", a[index], b[index], a[index] * b[index]);
-        b[index] *= a[index];
-    }
-}
-
 int main(int argc, char* argv[]) {
     int n = atoi(argv[1]);
 
@@ -24,15 +15,21 @@ int main(int argc, char* argv[]) {
     uniform_real_distribution<float> distB(0., 1.);
 
     cudaMalloc((void**)&dA, sizeof(float) * n);
-    cudaMemset(dA, distA(generator), n * sizeof(float));
+    cudaMemset(dA, 0, n * sizeof(float));
     cudaMalloc((void**)&dB, sizeof(float) * n);
-    cudaMemset(dB, distB(generator), n * sizeof(float));
+    cudaMemset(dB, 0, n * sizeof(float));
+    
+    // set dA and dB to random values:
+    for(int i = 0; i < n; i++){
+        dA[i] = distA(generator);
+        dB[i] = distB(generator);
+    }
 
     int t = 512;
     int b = (n + t - 1) / t;
     printf("threads = %d | blocks = %d\n", t, b);
 
-    vscaleInt<<<b, t>>>(dA, dB, n);
+    vscale<<<b, t>>>(dA, dB, n);
     cudaDeviceSynchronize();
 
     cudaMemcpy(&hB, dB, sizeof(float) * n, cudaMemcpyDeviceToHost);
