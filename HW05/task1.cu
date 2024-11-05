@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 __global__ void factorialKernel() { 
-    int a = threadIdx.x;
+    int a = threadIdx.x + 1;
     int b = 1;
     for (int i = 2; i <= a; i++) {
         b *= i;
