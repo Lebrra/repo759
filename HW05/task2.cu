@@ -17,8 +17,8 @@ int main() {
     cudaMemset(dA, 0, n * sizeof(int));
 
     mt19937 generator(12354);
-    uniform_real_distribution<float> dist(0., 100.);
-    auto r = static_cast <int> dist(generator);
+    uniform_int_distribution<int> dist(0., 100.);
+    auto r = dist(generator);
 
     algebraKernel<<<2, 8>>>(dA, r);
     cudaDeviceSynchronize();
