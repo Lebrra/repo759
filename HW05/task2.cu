@@ -16,7 +16,7 @@ int main() {
 
     float r = static_cast <int> (rand() / static_cast <int> (RAND_MAX / 100)) - 50;
 
-    factorialKernel<<<2, 8>>>(dA, r);
+    algebraKernel<<<2, 8>>>(dA, r);
     cudaDeviceSynchronize();
 
     cudaMemcpy(&hA, dA, sizeof(int) * n, cudaMemcpyDeviceToHost);
