@@ -8,8 +8,6 @@ int main(int argc, char* argv[]) {
     int n = atoi(argv[1]);
     float hB[n], hA[n], *dB, *dA;
 
-    auto start = chrono::steady_clock::now();
-
     // prepping threads and blocks:
     int t = 512;
     int b = (n + t - 1) / t;
@@ -28,6 +26,8 @@ int main(int argc, char* argv[]) {
     cudaMalloc((void**)&dB, sizeof(float) * n);
     cudaMemcpy(dA, &hA, sizeof(float) * n, cudaMemcpyHostToDevice);
     cudaMemcpy(dB, &hB, sizeof(float) * n, cudaMemcpyHostToDevice);
+
+    auto start = chrono::steady_clock::now();
 
     // do math:
     vscale<<<b, t>>>(dA, dB, n);
