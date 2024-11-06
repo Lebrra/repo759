@@ -16,18 +16,17 @@ int main(int argc, char* argv[]) {
     srand(chrono::system_clock::now().time_since_epoch().count());
 
     // array initialization:
-
     for (int i = 0; i < n; i++){
         hA[i] = static_cast <float> (rand() / static_cast <float> (RAND_MAX / 20)) - 10;
         hB[i] = static_cast <float> (rand() / static_cast <float> (RAND_MAX / 2)) - 1;
     }
 
+    auto start = chrono::steady_clock::now();
+
     cudaMalloc((void**)&dA, sizeof(float) * n);
     cudaMalloc((void**)&dB, sizeof(float) * n);
     cudaMemcpy(dA, &hA, sizeof(float) * n, cudaMemcpyHostToDevice);
     cudaMemcpy(dB, &hB, sizeof(float) * n, cudaMemcpyHostToDevice);
-
-    auto start = chrono::steady_clock::now();
 
     // do math:
     vscale<<<b, t>>>(dA, dB, n);
