@@ -9,7 +9,7 @@ int main(int argc, char* argv[]) {
     float hB[n], hA[n], *dB, *dA;
 
     // prepping threads and blocks:
-    int t = 512;
+    int t = 16;
     int b = (n + t - 1) / t;
 
     // randomization:
