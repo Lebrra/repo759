@@ -14,8 +14,8 @@ int main(int argc, char* argv[]) {
 
     // array initialization:
     for (int i = 0; i < n; i++){
-        hA[i] = static_cast <float> (rand() / static_cast <float> (RAND_MAX / 2)) - 1;
-        hB[i] = static_cast <float> (rand() / static_cast <float> (RAND_MAX / 2)) - 1;
+        hA[i] = static_cast <float> (rand() / static_cast <int> (RAND_MAX / 20)) - 10;
+        hB[i] = static_cast <float> (rand() / static_cast <int> (RAND_MAX / 20)) - 10;
     }
 
     auto start = chrono::steady_clock::now();
@@ -43,21 +43,21 @@ int main(int argc, char* argv[]) {
 	cout << "last element:   \t" << hC[n*n - 1] << endl << endl;
 
     // print all:
-    cout << "A:";
+    cout << "A:" << endl;
     for (int i = 0; i < n * n; i++) {
 		cout << hA[i] << " ";
 		if (i % n == n - 1) cout << endl;
 	}
     cout << endl;
 
-    cout << "B:";
+    cout << "B:" << endl;
     for (int i = 0; i < n * n; i++) {
 		cout << hB[i] << " ";
 		if (i % n == n - 1) cout << endl;
 	}
     cout << endl;
 
-    cout << "C:";
+    cout << "C:" << endl;
     for (int i = 0; i < n * n; i++) {
 		cout << hC[i] << " ";
 		if (i % n == n - 1) cout << endl;
