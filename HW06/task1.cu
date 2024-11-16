@@ -18,6 +18,20 @@ int main(int argc, char* argv[]) {
         hB[i] = static_cast <float> (rand() / static_cast <float> (RAND_MAX / 2)) - 1;
     }
 
+    cout << "A:" << endl;
+    for (int i = 0; i < n * n; i++) {
+		cout << hA[i] << " ";
+		if (i % n == n - 1) cout << endl;
+	}
+    cout << endl;
+
+    cout << "B:" << endl;
+    for (int i = 0; i < n * n; i++) {
+		cout << hB[i] << " ";
+		if (i % n == n - 1) cout << endl;
+	}
+    cout << endl;
+
     auto start = chrono::steady_clock::now();
 
     cudaMalloc((void**)&dA, sizeof(float) * n);
@@ -41,6 +55,14 @@ int main(int argc, char* argv[]) {
 	cout << "time to process:\t" << (timePassed.count() / 1000) << " milliseconds\n";
 	cout << "first element:  \t" << hC[0] << endl;
 	cout << "last element:   \t" << hC[n*n - 1] << endl << endl;
+
+    // print all:
+
+    cout << "C:" << endl;
+    for (int i = 0; i < n * n; i++) {
+		cout << hC[i] << " ";
+		if (i % n == n - 1) cout << endl;
+	}
 
     cudaFree(dB);
     cudaFree(dA);

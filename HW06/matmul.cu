@@ -17,16 +17,13 @@ __global__ void matmul_kernel(const float* A, const float* B, float* C, size_t n
     // need to iterate k
 
     int iIndex = threadIdx.x + blockIdx.x * blockDim.x;
-    printf("Updating index %i * %i = %i\n", threadIdx.x, blockIdx.x, iIndex);
     if (iIndex >= n*n) return;
-    //printf("Updating index %i\n", iIndex);
 
     for (int k = 0; k < n; k++){
         int jIndex = blockIdx.x * n + k + (iIndex / n);    // at iIndex = 4 -> 4, 5, 6, 7
         int kIndex = k * n + blockIdx.x + (iIndex % n);    // at iIndex = 1 -> 1, 5, 9, 13
 
         int adder = A[jIndex] * B[kIndex];
-        //printf("Updating index %i\nj = %i, k = %i, adder = %d\n", iIndex, jIndex, kIndex, adder);
         C[iIndex] += adder;
     }
 }
@@ -36,7 +33,6 @@ __global__ void matmul_kernel(const float* A, const float* B, float* C, size_t n
 // cudaEventSynchronize to time it, that call serves the same purpose as cudaDeviceSynchronize).
 void matmul(const float* A, const float* B, float* C, size_t n, unsigned int threads_per_block){
     int blocks = (n*n + threads_per_block - 1) / threads_per_block;
-    printf("Blocks %i\n", blocks);
     matmul_kernel<<<blocks, threads_per_block>>>(A, B, C, n);
     cudaDeviceSynchronize();
 }
