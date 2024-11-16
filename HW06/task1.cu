@@ -41,7 +41,14 @@ int main(int argc, char* argv[]) {
 	cout << "time to process:\t" << (timePassed.count() / 1000) << " milliseconds\n";
 	cout << "first element:  \t" << hC[0] << endl;
 	cout << "last element:   \t" << hC[n*n - 1] << endl << endl;
-    cout << endl;
+
+    // print all:
+    for (int i = 0; i < n * n; i++) {
+		if ((i + 1) % n == 0) cout << "[";
+        cout << hC[i];
+        if ((i + 1) % n == 0) cout << "]" << endl;
+        else cout << ", ";
+	}
 
     cudaFree(dB);
     cudaFree(dA);

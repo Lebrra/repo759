@@ -12,10 +12,4 @@ module load gcc/11.3.0
 nvcc task1.cu matmul.cu -Xcompiler -O3 -Xcompiler -Wall -Xptxas -O3 -std c++17 -o task1
 date
 
-pow=1
-for ((i=0; i<4; i++)) do pow=$(($pow*2)); done
-for ((i=0; i<10; i++)) 
-do 
-    pow=$(($pow*2)); 
-    ./task1 $pow 1024; 
-done
+./task1 4 1024
