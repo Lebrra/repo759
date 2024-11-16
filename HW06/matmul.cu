@@ -15,14 +15,13 @@ __global__ void matmul_kernel(const float* A, const float* B, float* C, size_t n
     // threadIdx = i
     // blockIdx = j
     // need to iterate k
-    int block = blockIdx.x * blockDim.x;
 
-    int iIndex = threadIdx.x + block;
+    int iIndex = threadIdx.x + blockIdx.x * blockDim.x;
     if (iIndex >= n*n) return;
 
     for (int k = 0; k < n; k++){
-        int jIndex = (iIndex / n) * n + k;
-        int kIndex = k * n + (iIndex % n);
+        int jIndex = blockIdx.x * blockDim.x * n + k + (iIndex / n);
+        int kIndex = k * n + blockIdx.x * blockDim.x + (iIndex % n);
         if (k == 0) printf("INDEX 0 -> index = %d | j = %d | k = %d\n", iIndex, jIndex, kIndex);
         if (k == 1) printf("INDEX 1 -> index = %d | j = %d | k = %d\n", iIndex, jIndex, kIndex);
         C[iIndex] += A[jIndex] * B[kIndex];
