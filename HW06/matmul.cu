@@ -19,6 +19,7 @@ __global__ void matmul_kernel(const float* A, const float* B, float* C, size_t n
     //int tpb = 512; //todo: how to get 512 ?
     int iIndex = n * threadIdx.x + blockIdx.x;
     if (iIndex >= n*n) return;
+    printf("Updating index %i", iIndex);
 
     for (int k = 0; k < n; k++){
         int jIndex = threadIdx.x * n + k;

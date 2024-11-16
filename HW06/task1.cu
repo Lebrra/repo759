@@ -43,6 +43,21 @@ int main(int argc, char* argv[]) {
 	cout << "last element:   \t" << hC[n*n - 1] << endl << endl;
 
     // print all:
+    cout << "A:";
+    for (int i = 0; i < n * n; i++) {
+		cout << hA[i] << " ";
+		if (i % n == n - 1) cout << endl;
+	}
+    cout << endl;
+
+    cout << "B:";
+    for (int i = 0; i < n * n; i++) {
+		cout << hB[i] << " ";
+		if (i % n == n - 1) cout << endl;
+	}
+    cout << endl;
+
+    cout << "C:";
     for (int i = 0; i < n * n; i++) {
 		cout << hC[i] << " ";
 		if (i % n == n - 1) cout << endl;
