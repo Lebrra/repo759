@@ -14,8 +14,8 @@ int main(int argc, char* argv[]) {
 
     // array initialization:
     for (int i = 0; i < n; i++){
-        hA[i] = static_cast <float> (rand() / static_cast <float> (RAND_MAX / 2)) - 1;
-        hB[i] = static_cast <float> (rand() / static_cast <float> (RAND_MAX / 2)) - 1;
+        hA[i] = static_cast <float> (rand() / static_cast <float> (RAND_MAX / 2)) + 1;
+        hB[i] = static_cast <float> (rand() / static_cast <float> (RAND_MAX / 2)) + 1;
     }
 
     cout << "A:" << endl;
