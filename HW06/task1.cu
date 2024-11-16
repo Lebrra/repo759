@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
     srand(chrono::system_clock::now().time_since_epoch().count());
 
     // array initialization:
-    for (int i = 0; i < n; i++){
+    for (int i = 0; i < n*n; i++){
         hA[i] = static_cast <float> (rand() / static_cast <float> (RAND_MAX / 2)) + 10;
         hB[i] = static_cast <float> (rand() / static_cast <float> (RAND_MAX / 2)) + 10;
     }
