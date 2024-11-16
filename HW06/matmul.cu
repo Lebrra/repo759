@@ -24,7 +24,7 @@ __global__ void matmul_kernel(const float* A, const float* B, float* C, size_t n
         int kIndex = k * n + blockIdx.x + (iIndex % n);    // at iIndex = 1 -> 1, 5, 9, 13
 
         int adder = A[jIndex] * B[kIndex];
-        if (iIndex < n) printf("Updating index %i\nj = %i, k = %i, adder = %d\n", iIndex, jIndex, kIndex, adder);
+        if (iIndex < n) printf("Updating index %i\nj = %i, k = %i, adder = %d\n", iIndex, A[jIndex], B[kIndex], adder);
         C[iIndex] += adder;
     }
 }
