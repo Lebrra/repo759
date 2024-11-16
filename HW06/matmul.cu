@@ -18,14 +18,13 @@ __global__ void matmul_kernel(const float* A, const float* B, float* C, size_t n
 
     int iIndex = threadIdx.x + blockIdx.x * n;
     if (iIndex >= n*n) return;
-    printf("Updating index %i\n", iIndex);
 
     for (int k = 0; k < n; k++){
         int jIndex = blockIdx.x * n + k;
         int kIndex = k * n + blockIdx.x;
 
         int adder = A[jIndex] * B[kIndex];
-        printf("%d * %d = %d\n", A[jIndex], B[kIndex], adder);
+        printf("Updating index %i\nj = %i, k = %i, adder = %d\n", iIndex, jIndex, kIndex, adder);
         C[iIndex] += adder;
     }
 }
