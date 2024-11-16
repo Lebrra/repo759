@@ -12,4 +12,14 @@ module load gcc/11.3.0
 nvcc task1.cu matmul.cu -Xcompiler -O3 -Xcompiler -Wall -Xptxas -O3 -std c++17 -o task1
 date
 
-./task1 8 32
+pow=1
+for ((i=0; i<4; i++)) do pow=$(($pow*2)); done
+for ((i=0; i<10; i++)) 
+do 
+    pow=$(($pow*2)); 
+    echo "1024 threads:"
+    ./task1 $pow 1024; 
+    
+    echo "64 threads:"
+    ./task1 $pow 64; 
+done
