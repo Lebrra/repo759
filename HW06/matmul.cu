@@ -16,7 +16,7 @@ __global__ void matmul_kernel(const float* A, const float* B, float* C, size_t n
     // blockIdx = j
     // need to iterate k
 
-    int iIndex = threadIdx.x + threadIdx.y * n;
+    int iIndex = threadIdx.x + blockIdx.x * blockDim.x;
     printf("Updating index %i * %i = %i\n", threadIdx.x, blockIdx.x, iIndex);
     if (iIndex >= n*n) return;
     //printf("Updating index %i\n", iIndex);
