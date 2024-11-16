@@ -7,7 +7,7 @@ using namespace std;
 int main(int argc, char* argv[]) {
     int n = atoi(argv[1]);
     int t = atoi(argv[2]);
-    float hB[n], hA[n], hC[n*n], *dB, *dA, *dC;
+    float hB[n*n], hA[n*n], hC[n*n], *dB, *dA, *dC;
 
     // randomization:
     srand(chrono::system_clock::now().time_since_epoch().count());
@@ -20,11 +20,11 @@ int main(int argc, char* argv[]) {
 
     auto start = chrono::steady_clock::now();
 
-    cudaMalloc((void**)&dA, sizeof(float) * n);
-    cudaMalloc((void**)&dB, sizeof(float) * n);
+    cudaMalloc((void**)&dA, sizeof(float) * n * n);
+    cudaMalloc((void**)&dB, sizeof(float) * n * n);
     cudaMalloc((void**)&dC, sizeof(float) * n * n);
-    cudaMemcpy(dA, &hA, sizeof(float) * n, cudaMemcpyHostToDevice);
-    cudaMemcpy(dB, &hB, sizeof(float) * n, cudaMemcpyHostToDevice);
+    cudaMemcpy(dA, &hA, sizeof(float) * n * n, cudaMemcpyHostToDevice);
+    cudaMemcpy(dB, &hB, sizeof(float) * n * n, cudaMemcpyHostToDevice);
     cudaMemset(dC, 0, n * n * sizeof(float));
 
     // do math:
