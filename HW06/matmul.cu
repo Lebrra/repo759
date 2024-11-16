@@ -20,8 +20,8 @@ __global__ void matmul_kernel(const float* A, const float* B, float* C, size_t n
     if (iIndex >= n*n) return;
 
     for (int k = 0; k < n; k++){
-        int jIndex = blockIdx.x * n + k;
-        int kIndex = k * n + blockIdx.x;
+        int jIndex = k * n + blockIdx.x;
+        int kIndex = blockIdx.x * n + k;
 
         int adder = A[jIndex] * B[kIndex];
         printf("Updating index %i\nj = %i, k = %i, adder = %d\n", iIndex, jIndex, kIndex, adder);
