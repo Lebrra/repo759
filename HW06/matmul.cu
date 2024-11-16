@@ -18,13 +18,13 @@ __global__ void matmul_kernel(const float* A, const float* B, float* C, size_t n
 
     //int tpb = 512; //todo: how to get 512 ?
     int iIndex = n * threadIdx.x + blockIdx.x;
+    if (iIndex >= n*n) return;
+
     for (int k = 0; k < n; k++){
         int jIndex = threadIdx.x * n + k;
         int kIndex = k * n + blockIdx.x;
 
-        if (iIndex < n*n && jIndex < n*n && kIndex < n*n) {
-            C[iIndex] += A[jIndex] * B[kIndex];
-        }
+        C[iIndex] += A[jIndex] * B[kIndex];
     }
 }
 
