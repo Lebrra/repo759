@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
     cudaMalloc((void**)&dC, sizeof(float) * n * n);
     cudaMemcpy(dA, &hA, sizeof(float) * n, cudaMemcpyHostToDevice);
     cudaMemcpy(dB, &hB, sizeof(float) * n, cudaMemcpyHostToDevice);
-    cudaMemcpy(dC, &hC, sizeof(float) * n * n, cudaMemcpyHostToDevice);
+    cudaMemset(dC, 0, n * n * sizeof(float));
 
     // do math:
     matmul(dA, dB, dC, n, t);
@@ -44,10 +44,8 @@ int main(int argc, char* argv[]) {
 
     // print all:
     for (int i = 0; i < n * n; i++) {
-		if ((i + 1) % n == 0) cout << "[";
-        cout << hC[i];
-        if ((i + 1) % n == 0) cout << "]" << endl;
-        else cout << ", ";
+		cout << hC[i] << " ";
+		if (i % n == n - 1) cout << endl;
 	}
 
     cudaFree(dB);
