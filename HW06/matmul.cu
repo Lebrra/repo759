@@ -23,7 +23,7 @@ __global__ void matmul_kernel(const float* A, const float* B, float* C, size_t n
     for (int k = 0; k < n; k++){
         int jIndex = (iIndex / n) * n + k;
         int kIndex = k * n + (iIndex % n);
-        if (k == 3) printf("index = %d | j = %d | k = %d\n", iIndex, jIndex, kIndex);
+        if (k == 0) printf("index = %d | j = %d | k = %d\n", iIndex, jIndex, kIndex);
         C[iIndex] += A[jIndex] * B[kIndex];
     }
 }
