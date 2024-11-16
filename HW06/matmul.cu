@@ -17,13 +17,13 @@ __global__ void matmul_kernel(const float* A, const float* B, float* C, size_t n
     // need to iterate k
 
     //int tpb = 512; //todo: how to get 512 ?
-    int iIndex = n * threadIdx.x + blockIdx.x;
+    int iIndex = threadIdx.x + blockIdx.x * n;
     if (iIndex >= n*n) return;
     printf("Updating index %i", iIndex);
 
     for (int k = 0; k < n; k++){
-        int jIndex = threadIdx.x * n + k;
-        int kIndex = k * n + blockIdx.x;
+        int jIndex = blockIdx.x * n + k;
+        int kIndex = k * n + threadIdx.x;
 
         C[iIndex] += A[jIndex] * B[kIndex];
     }
