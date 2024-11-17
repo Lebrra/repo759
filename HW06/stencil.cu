@@ -3,6 +3,8 @@
 
 #ifndef STENCIL_CUH
 
+extern __shared__ float allSharedData[];
+
 // Computes the convolution of image and mask, storing the result in output.
 // Each thread should compute _one_ element of the output matrix.
 // Shared memory should be allocated _dynamically_ only.
@@ -21,13 +23,12 @@
 // - The elements of image that are needed to compute the elements of output corresponding to the threads in the given block
 // - The output image elements corresponding to the given block before it is written back to global memory
 __global__ void stencil_kernel(const float* image, const float* mask, float* output, unsigned int n, unsigned int R){
-    extern __shared__ float allSharedData[];
     int RExpand = R * 2 + 1;
 
-    // indicies of arrays:
-    int maskStart = 0;              // length = RExpand
-    int imageStart = RExpand;       // length = n
-    int outputStart = RExpand + n;  // length = n
+    // pointers to shared arrays:
+    float* maskPointer = (float*)allSharedData;
+    float* imagePointer = (float*)&maskPointer[RExpand];
+    float* outputPointer = (float*)&imagePointer[n];
 
     // index == true index | i == index within current block
     int index = threadIdx.x + blockIdx.x * blockDim.x;
@@ -35,21 +36,22 @@ __global__ void stencil_kernel(const float* image, const float* mask, float* out
 
     // set shared arrays:
     if (i < n){
-        allSharedData[i + imageStart] = image[i];
-        if (i < RExpand) allSharedData[i + maskStart] = mask[i];
+        imagePointer[i] = image[i];
+        if (i < RExpand) maskPointer[i] = mask[i];
     }
     __syncthreads();
 
     // calculate:
-    //for (int j = -R; j < R; j++) {
-    //    if (i + j < 0 || i + j >= n) allSharedData[i + outputStart] += 1 * allSharedData[j + R + maskStart];
-    //    else allSharedData[i + outputStart] += allSharedData[i + j + imageStart] * allSharedData[j + R + maskStart];
-    //}
-    if (i < n) allSharedData[i + outputStart] = allSharedData[i + maskStart];
+    if (i < n) {
+        for (int j = -R; j < R; j++) {
+            if (i + j < 0 || i + j >= n) outputPointer[i] += 1 * maskPointer[j + R];
+            else outputPointer[i] += imagePointer[i + j] * maskPointer[j + R];
+        }
+    }
     __syncthreads();
 
     // copy back to output:
-    if (i < n) output[index] = image[i];
+    if (i < n) output[index] = outputPointer[i];
 }
 
 // Makes one call to stencil_kernel with threads_per_block threads per block.
