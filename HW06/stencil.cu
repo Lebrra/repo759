@@ -38,9 +38,17 @@ __global__ void stencil_kernel(const float* image, const float* mask, float* out
     // set shared values:
     imagePointer[i] = image[index];
     if (i < RExpand) maskPointer[i] = mask[i];
+    outputPointer[i] = 0;
     __syncthreads();
 
-    output[index] = imagePointer[i];
+    // compute:
+    for (int j = 0; j < R*2; j++){
+        // todo: image[i + (j - R)]
+        outputPointer[i] += imagePointer[i] * maskPointer[j];
+    }
+    __syncthreads();
+
+    output[index] = outputPointer[i];
 }
 
 // Makes one call to stencil_kernel with threads_per_block threads per block.
