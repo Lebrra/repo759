@@ -26,6 +26,7 @@ __global__ void stencil_kernel(const float* image, const float* mask, float* out
     // index == true index | i == index within current block
     int index = threadIdx.x + blockIdx.x * blockDim.x;
     int i = threadIdx.x;
+    int RExpand = R * 2 + 1;
 
     if (index >= n) return;
 
@@ -34,7 +35,9 @@ __global__ void stencil_kernel(const float* image, const float* mask, float* out
     float* imagePointer = (float*)&maskPointer[RExpand];
     float* outputPointer = (float*)&imagePointer[blockDim.x];
     
+    // set shared values:
     imagePointer[i] = image[index];
+    if (i < RExpand) maskPointer[i] = mask[i];
     __syncthreads();
 
     output[index] = imagePointer[i];
@@ -53,7 +56,7 @@ __host__ void stencil(const float* image,
                       unsigned int R,
                       unsigned int threads_per_block){
     int blocks = (R*2+1 + threads_per_block - 1) / threads_per_block;
-    int sharedCount = (R * 2 + 1) + threads_per_count * 2;
+    int sharedCount = (R * 2 + 1) + threads_per_block * 2;
     printf("Blocks: %d \n", blocks);
     stencil_kernel<<<blocks, threads_per_block, sharedCount * sizeof(float)>>>(image, mask, output, n, R);
     cudaDeviceSynchronize();
