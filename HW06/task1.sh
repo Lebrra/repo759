@@ -19,7 +19,4 @@ do
     pow=$(($pow*2)); 
     echo "1024 threads:"
     ./task1 $pow 1024; 
-    
-    echo "64 threads:"
-    ./task1 $pow 64; 
 done
