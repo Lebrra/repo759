@@ -31,9 +31,8 @@ int main(int argc, char* argv[]) {
     cudaMemcpy(dMask, &hMask, sizeof(float) * RExpanded, cudaMemcpyHostToDevice);
     cudaMemset(dOutput, 0, n * sizeof(float));
 
-    // call stencil (note threads are set within stencil)
-    int blocks = (RExpanded + threads_per_block - 1) / threads_per_block;
-    stencil<<<blocks, 1>>>(dImage, dMask, dOutput, n, R, t);
+    // call stencil
+    stencil(dImage, dMask, dOutput, n, R, t);
 
     // results:
     cudaMemcpy(&hOutput, dOutput, sizeof(float) * n, cudaMemcpyDeviceToHost);

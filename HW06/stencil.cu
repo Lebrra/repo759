@@ -56,8 +56,8 @@ __host__ void stencil(const float* image,
                       unsigned int n,
                       unsigned int R,
                       unsigned int threads_per_block){
-    // block count is determined on the call of stencil
-    stencil_kernel<<<1, threads_per_block, (R * 2 + 1) * sizeof(float)>>>(image, mask, output, n, R);
+    int blocks = (R*2+1 + threads_per_block - 1) / threads_per_block;
+    stencil_kernel<<<blocks, threads_per_block, (R * 2 + 1) * sizeof(float)>>>(image, mask, output, n, R);
     cudaDeviceSynchronize();
 }
 
