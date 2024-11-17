@@ -49,7 +49,7 @@ __global__ void stencil_kernel(const float* image, const float* mask, float* out
     __syncthreads();
 
     // copy back to output:
-    if (i < n) output[index] = allSharedData[i + outputStart];
+    if (i < n) output[index] = image[i];
 }
 
 // Makes one call to stencil_kernel with threads_per_block threads per block.
