@@ -19,8 +19,6 @@
 // - The output image elements corresponding to the given block before it is written back to global memory
 __global__ void stencil_kernel(const float* image, const float* mask, float* output, unsigned int n, unsigned int R){
     extern __shared__ float maskS[];    //why?
-    __shared__ float outputBlock[blockDim.x];
-    __shared__ float imageCurrent[R * 2 + 1];
 
     // index == true index | i == index within current block
     int index = threadIdx.x + blockIdx.x * blockDim.x;
@@ -56,8 +54,12 @@ __host__ void stencil(const float* image,
                       unsigned int n,
                       unsigned int R,
                       unsigned int threads_per_block){
-    int blocks = (R*2+1 + threads_per_block - 1) / threads_per_block;
-    stencil_kernel<<<blocks, threads_per_block, (R * 2 + 1) * sizeof(float)>>>(image, mask, output, n, R);
+    int RExpanded = 2 * R + 1;
+    int blocks = (RExpanded + threads_per_block - 1) / threads_per_block;
+    __shared__ float outputBlock[threads_per_block];
+    __shared__ float imageCurrent[RExpanded];
+
+    stencil_kernel<<<blocks, threads_per_block, RExpanded * sizeof(float)>>>(image, mask, output, n, R);
     cudaDeviceSynchronize();
 }
 
