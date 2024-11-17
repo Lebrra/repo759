@@ -47,24 +47,6 @@ int main(int argc, char* argv[]) {
 	cout << "first element:  \t" << hOutput[0] << endl;
 	cout << "last element:   \t" << hOutput[n - 1] << endl << endl;
 
-    cout << "Image:\n"; 
-    for (int i = 0; i < 10; i++){
-        cout << hImage[i] << " ";
-    }
-    cout << endl << endl;
-    
-    cout << "Mask:\n"; 
-    for (int i = 0; i < 10; i++){
-        cout << hMask[i] << " ";
-    }
-    cout << endl << endl;
-
-    cout << "Output:\n"; 
-    for (int i = 0; i < 10; i++){
-        cout << hOutput[i] << " ";
-    }
-    cout << endl << endl;
-
     cudaFree(dImage);
     cudaFree(dMask);
     cudaFree(dOutput);

@@ -14,7 +14,7 @@ date
 
 pow=1
 for ((i=0; i<9; i++)) do pow=$(($pow*2)); done
-for ((i=0; i<20; i++)) 
+for ((i=0; i<2; i++)) 
 do 
     pow=$(($pow*2)); 
     ./task2 $pow 128 1024; 
