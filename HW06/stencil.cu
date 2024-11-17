@@ -25,38 +25,32 @@ __global__ void stencil_kernel(const float* image, const float* mask, float* out
     int RExpand = R * 2 + 1;
 
     // break appart arrays:
-    float* maskBlock = allSharedData;
-    float* imageBlock = allSharedData + RExpand;
-    float* outputBlock = imageBlock + RExpand;
+    //float* maskBlock = allSharedData;
+    //float* imageBlock = allSharedData + RExpand;
+    //float* outputBlock = imageBlock + RExpand;
+
+    // indicies of arrays:
+    int maskStart = 0;
+    int imageStart = RExpand;
+    int outputStart = RExpand + n;
 
     // index == true index | i == index within current block
     int index = threadIdx.x + blockIdx.x * blockDim.x;
     int i = threadIdx.x;
 
-    //if (index <= n) return;   // leaving this out due to possible unsafe __syncthreads() calls later
+    // set shared arrays:
+    if (i < n){
+        allSharedData[i + imageStart] = image[i];
+        allSharedData[i + maskStart] = mask[i];
+    }
+    __syncthreads();
 
     for (int j = -R; j < R; j++) {
-        // load current image and mask(?):
-        if (i + j < 0 || i + j >= n) imageBlock[j] = 1;
-        else imageBlock[j] = image[i + j];
-        maskBlock[j] = mask[j];
+        if (i + j < 0 || i + j >= n) allSharedData[i + outputStart] += 1 * allSharedData[j + R + maskStart];
+        else allSharedData[i + outputStart] += allSharedData[i + j + imageStart] * allSharedData[j + R + maskStart];
+
         __syncthreads();
-
-        if (index < 5){
-            printf("thread = %d | mask[0] = %.2f | image[0] = = %.2f\n", index, maskBlock[0], imageBlock[0]);
-        }
-
-        // update output:
-        outputBlock[i] += imageBlock[j] * maskBlock[j + R];
-        __syncthreads();
-
-        if (index < 5){
-            printf("my output: output[%d] = %.2f\n", i, outputBlock[i]);
-        }
     }
-
-    // update actual output:
-    output[index] = outputBlock[i];
 }
 
 // Makes one call to stencil_kernel with threads_per_block threads per block.
