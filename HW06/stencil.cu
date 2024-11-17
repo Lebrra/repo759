@@ -48,7 +48,7 @@ __global__ void stencil_kernel(const float* image, const float* mask, float* out
         __syncthreads();
 
         if (index < 5){
-            printf("my output: output[%d] = %.2f", i, outPutBlock[i]);
+            printf("my output: output[%d] = %.2f", i, outputBlock[i]);
         }
     }
 
