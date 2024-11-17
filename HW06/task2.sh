@@ -15,4 +15,4 @@ date
 pow=1
 for ((i=0; i<9; i++)) do pow=$(($pow*2)); done
 echo "1024 threads:"
-./task2 $pow 128 1024; 
+./task2 128 32 256; 
