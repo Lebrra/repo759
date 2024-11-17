@@ -63,10 +63,10 @@ __host__ void stencil(const float* image,
                       unsigned int n,
                       unsigned int R,
                       unsigned int threads_per_block){
-    int blocks = (R*2+1 + threads_per_block - 1) / threads_per_block;
+    int blocks = (n + threads_per_block - 1) / threads_per_block;
     int sharedCount = (R * 2 + 1) + threads_per_block * 2;
     stencil_kernel<<<blocks, threads_per_block, sharedCount * sizeof(float)>>>(image, mask, output, n, R);
-    //cudaDeviceSynchronize();
+    cudaDeviceSynchronize();
 }
 
 #endif
