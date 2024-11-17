@@ -43,8 +43,8 @@ __global__ void stencil_kernel(const float* image, const float* mask, float* out
 
     // compute:
     for (int j = 0; j < R*2; j++){
-        // todo: image[i + (j - R)]
-        outputPointer[i] += imagePointer[i] * maskPointer[j];
+        if (i + j < 0 || i + j >= n) outputPointer[i] += maskPointer[j];
+        else outputPointer[i] += imagePointer[i + j] * maskPointer[j];
     }
     __syncthreads();
 
@@ -65,7 +65,6 @@ __host__ void stencil(const float* image,
                       unsigned int threads_per_block){
     int blocks = (R*2+1 + threads_per_block - 1) / threads_per_block;
     int sharedCount = (R * 2 + 1) + threads_per_block * 2;
-    printf("Blocks: %d \n", blocks);
     stencil_kernel<<<blocks, threads_per_block, sharedCount * sizeof(float)>>>(image, mask, output, n, R);
     cudaDeviceSynchronize();
 }
