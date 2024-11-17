@@ -3,8 +3,6 @@
 
 #ifndef STENCIL_CUH
 
-extern __shared__ float allSharedData[];
-
 // Computes the convolution of image and mask, storing the result in output.
 // Each thread should compute _one_ element of the output matrix.
 // Shared memory should be allocated _dynamically_ only.
@@ -23,35 +21,18 @@ extern __shared__ float allSharedData[];
 // - The elements of image that are needed to compute the elements of output corresponding to the threads in the given block
 // - The output image elements corresponding to the given block before it is written back to global memory
 __global__ void stencil_kernel(const float* image, const float* mask, float* output, unsigned int n, unsigned int R){
-    int RExpand = R * 2 + 1;
-
-    // pointers to shared arrays:
-    float* maskPointer = (float*)allSharedData;
-    float* imagePointer = (float*)&maskPointer[RExpand];
-    float* outputPointer = (float*)&imagePointer[n];
+    extern __shared__ float allSharedData[];
 
     // index == true index | i == index within current block
     int index = threadIdx.x + blockIdx.x * blockDim.x;
     int i = threadIdx.x;
 
-    // set shared arrays:
-    if (i < n){
-        imagePointer[i] = image[i];
-        if (i < RExpand) maskPointer[i] = mask[i];
-    }
+    if (index >= n) return;
+    
+    allSharedData[index] = image[i];
     __syncthreads();
 
-    // calculate:
-    if (i < n) {
-        for (int j = -R; j < R; j++) {
-            if (i + j < 0 || i + j >= n) outputPointer[i] += 1 * maskPointer[j + R];
-            else outputPointer[i] += imagePointer[i + j] * maskPointer[j + R];
-        }
-    }
-    __syncthreads();
-
-    // copy back to output:
-    if (i < n) output[index] = outputPointer[i];
+    output[index] = allSharedData[index];
 }
 
 // Makes one call to stencil_kernel with threads_per_block threads per block.
@@ -68,7 +49,7 @@ __host__ void stencil(const float* image,
                       unsigned int threads_per_block){
     int blocks = (R*2+1 + threads_per_block - 1) / threads_per_block;
     printf("Blocks: %d \n", blocks);
-    stencil_kernel<<<blocks, threads_per_block, 2 * n * (R * 2 + 1) * sizeof(float)>>>(image, mask, output, n, R);
+    stencil_kernel<<<blocks, threads_per_block, n * sizeof(float)>>>(image, mask, output, n, R);
     cudaDeviceSynchronize();
 }
 
