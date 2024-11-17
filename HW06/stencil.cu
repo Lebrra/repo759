@@ -1,3 +1,6 @@
+#include <cuda.h>
+#include <stdio.h>
+
 #ifndef STENCIL_CUH
 
 // Computes the convolution of image and mask, storing the result in output.
