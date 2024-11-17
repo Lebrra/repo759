@@ -25,9 +25,9 @@ __global__ void stencil_kernel(const float* image, const float* mask, float* out
     int RExpand = R * 2 + 1;
 
     // indicies of arrays:
-    int maskStart = 0;
-    int imageStart = RExpand;
-    int outputStart = RExpand + n;
+    int maskStart = 0;              // length = RExpand
+    int imageStart = RExpand;       // length = n
+    int outputStart = RExpand + n;  // length = n
 
     // index == true index | i == index within current block
     int index = threadIdx.x + blockIdx.x * blockDim.x;
@@ -36,23 +36,20 @@ __global__ void stencil_kernel(const float* image, const float* mask, float* out
     // set shared arrays:
     if (i < n){
         allSharedData[i + imageStart] = image[i];
-        allSharedData[i + maskStart] = mask[i];
+        if (i < RExpand) allSharedData[i + maskStart] = mask[i];
     }
     __syncthreads();
 
-    if (index < 10){
-        printf("Index: %d \n", index);
-    }
-
     // calculate:
-    for (int j = -R; j < R; j++) {
-        if (i + j < 0 || i + j >= n) allSharedData[i + outputStart] += 1 * allSharedData[j + R + maskStart];
-        else allSharedData[i + outputStart] += allSharedData[i + j + imageStart] * allSharedData[j + R + maskStart];
-    }
+    //for (int j = -R; j < R; j++) {
+    //    if (i + j < 0 || i + j >= n) allSharedData[i + outputStart] += 1 * allSharedData[j + R + maskStart];
+    //    else allSharedData[i + outputStart] += allSharedData[i + j + imageStart] * allSharedData[j + R + maskStart];
+    //}
+    if (i < n) allSharedData[i + outputStart] = allSharedData[i + maskStart];
     __syncthreads();
 
     // copy back to output:
-    output[index] = allSharedData[i + outputStart];
+    if (i < n) output[index] = allSharedData[i + outputStart];
 }
 
 // Makes one call to stencil_kernel with threads_per_block threads per block.
@@ -69,7 +66,7 @@ __host__ void stencil(const float* image,
                       unsigned int threads_per_block){
     int blocks = (R*2+1 + threads_per_block - 1) / threads_per_block;
     printf("Blocks: %d \n", blocks);
-    stencil_kernel<<<blocks, threads_per_block, 2 * (R * 2 + 1) * threads_per_block * sizeof(float)>>>(image, mask, output, n, R);
+    stencil_kernel<<<blocks, threads_per_block, 2 * n * (R * 2 + 1) * sizeof(float)>>>(image, mask, output, n, R);
     cudaDeviceSynchronize();
 }
 
