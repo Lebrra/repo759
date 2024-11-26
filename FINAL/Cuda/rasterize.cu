@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
     // gather data:
     int vertCount = 0;
     int triangleCount = 0;
-    int dVertCount, dTriCount;
+    int *dVertCount, *dTriCount;
     cudaMalloc((void**)&dVertCount, sizeof(int));
     cudaMalloc((void**)&dTriCount, sizeof(int));
     getVertexCount(fileName, dVertCount);
@@ -91,7 +91,7 @@ int main(int argc, char** argv) {
         cudaMemcpy(dTri, &triangle, sizeof(float) * 6, cudaMemcpyHostToDevice);
 
         // do parallelism here
-        inTriangle<<<definedSize, definedSize>>>(dTri, dPoints, validTriangle);
+        inTriangle<<<definedSize, definedSize>>>(dTri, dPoints, validTriangles);
         //cudaMemcpy(&pointTests, dPoints, sizeof(int) * definedSize * definedSize, cudaMemcpyDeviceToHost);
     }
     free(triangle);
