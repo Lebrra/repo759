@@ -41,10 +41,10 @@ __host__ void adjustSize(float* vertices, int vertexCount, float size, float pad
 
     float multiplier;
     if (pointsWidth > pointsHeight) {
-        multiplier = (definedSize - padding*2) / pointsWidth;
+        multiplier = (size - padding*2) / pointsWidth;
     }
     else { 
-        multiplier = (definedSize - padding*2) / pointsHeight;
+        multiplier = (size - padding*2) / pointsHeight;
     }
 
     // apply multiplier to all points (and offset if any points are negative)

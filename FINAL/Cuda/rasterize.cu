@@ -94,11 +94,7 @@ int main(int argc, char** argv) {
         inTriangle<<<definedSize, definedSize>>>(dTri, dPoints, validTriangles);
         //cudaMemcpy(&pointTests, dPoints, sizeof(int) * definedSize * definedSize, cudaMemcpyDeviceToHost);
     }
-    free(triangle);
     cudaFree(dTri);
-
-    free(vertices);
-    free(faces);
 
     cudaMemcpy(&pointTests, dPoints, sizeof(int) * definedSize * definedSize, cudaMemcpyDeviceToHost);
     cudaFree(dPoints);
