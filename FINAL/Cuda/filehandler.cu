@@ -11,7 +11,7 @@ __host__ void getVertexCount(string fileName, int* count){
     const string delim = ", ";
 
     getline(readFile, line);
-    count = stoi(line);
+    count[0] = stoi(line);
 }
 
 __host__ void readVertices(string fileName, float* vertices) {
@@ -40,7 +40,7 @@ __host__ void getFaceCount(string fileName, int* count){
     const string delim = ", ";
 
     getline(readFile, line);
-    count = stoi(line);
+    count[0] = stoi(line);
 }
 
 __host__ void readFaces(string fileName, int* faces) {
