@@ -51,6 +51,7 @@ int main(int argc, char** argv) {
     cudaMalloc((void**)&dVerts, sizeof(float) * vertCount*3);
     cudaMemcpy(dVerts, &vertices, sizeof(float) * vertCount*3, cudaMemcpyHostToDevice);
 
+        // adjust size method is here instead of its own function because it was erroring :(
     float minX = 0;
     float maxX = 0;
     float minY = 0;
@@ -81,6 +82,7 @@ int main(int argc, char** argv) {
     int blocks = ((vertCount*3) + 256 - 1) / 256;
     adjustValue<<<blocks, 256>>>(vertices, vertCount, minX, minY, padding, multiplier);
     cudaDeviceSynchronize();
+        // end of adjust size function
 
     cudaMemcpy(&vertices, dVerts, sizeof(float) * vertCount*3, cudaMemcpyDeviceToHost);
     cudaFree(dVerts);
@@ -148,6 +150,13 @@ int main(int argc, char** argv) {
             pixel[1] = colors[(pointTests[i] - 1)*3 + 1];
             pixel[2] = colors[(pointTests[i] - 1)*3 + 2];
         }
+        if (i < 5){
+            cout << "front pixel debug: (" << pixel[0] << ", " << pixel[1] << ", " << pixel[2] << ")\n";
+        }
+        else if (i > definedSize*definedSize-5){
+            cout << "end pixel debug: (" << pixel[0] << ", " << pixel[1] << ", " << pixel[2] << ")\n";
+        }
+
         writeVertex(fileName, pixel);
     }
     free(pixel);
