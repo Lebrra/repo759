@@ -95,7 +95,6 @@ int main(int argc, char** argv) {
     int validTriangles = 0;
     cout << "Comparing pixels with triangles..." << endl;
     float triangle[6], *dTri;
-    cudaMalloc((void**)&dTri, sizeof(float) * 6);
     
     for(int tri = 0; tri < triangleCount; tri++){
         int face1 = faces[tri * 3];
@@ -117,13 +116,15 @@ int main(int argc, char** argv) {
             }
         validTriangles++;
         
+        cudaMalloc((void**)&dTri, sizeof(float) * 6);
         cudaMemcpy(dTri, &triangle, sizeof(float) * 6, cudaMemcpyHostToDevice);
 
         // do parallelism here
         inTriangle<<<definedSize, definedSize>>>(dTri, dPoints, validTriangles);
         cudaDeviceSynchronize();
+
+        cudaFree(dTri);
     }
-    cudaFree(dTri);
     cout << "Found " << validTriangles << " valid triangles while rasterizing!\n";
 
     cudaMemcpy(&pointTests, dPoints, sizeof(int) * definedSize * definedSize, cudaMemcpyDeviceToHost);
@@ -154,12 +155,6 @@ int main(int argc, char** argv) {
             pixel[1] = colors[(pointTests[i] - 1)*3 + 1];
             pixel[2] = colors[(pointTests[i] - 1)*3 + 2];
             colorCounter++;
-        }
-        if (i < 5){
-            cout << "front pixel debug: (" << pixel[0] << ", " << pixel[1] << ", " << pixel[2] << ")\n";
-        }
-        else if (i > definedSize*definedSize-5){
-            cout << "end pixel debug: (" << pixel[0] << ", " << pixel[1] << ", " << pixel[2] << ")\n";
         }
 
         writeVertex(fileName, pixel);
