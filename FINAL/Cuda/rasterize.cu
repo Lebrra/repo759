@@ -88,12 +88,18 @@ int main(int argc, char** argv) {
     int vertCount = getVertexCount(fileName);
     int triangleCount = getFaceCount(fileName);
 
-    float* vertices = (float*)malloc(sizeof(float) * vertCount * 3);
-    int* faces = (int*)malloc(sizeof(int) * triangleCount * 3);
+    //float* vertices = (float*)malloc(sizeof(float) * vertCount * 3);
+    //int* faces = (int*)malloc(sizeof(int) * triangleCount * 3);
+    float vertices[vertCount*3]; 
+    int faces[triangleCount*3];
+    for(int i = 0; i < max(vertCount, triangleCount)*3; i++){
+        if (i < vertCount*3) vertices[i] = i;
+        if (i < triangleCount*3) faces[i] = i;
+    }
     float *dVerts;
     
-    readVertices(fileName, vertices);
-    readFaces(fileName, faces);
+    //readVertices(fileName, vertices);
+    //readFaces(fileName, faces);
 
     cout << "This file has " << vertCount << " vertices and " << triangleCount << " triangles!" << endl;
 
