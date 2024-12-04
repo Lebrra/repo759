@@ -22,9 +22,9 @@ __global__ void inTriangle(float* triangle, int* results, int triangleValue){
 
     int x = threadIdx.x;
     int y = blockIdx.x;
-    if (index < 5 || index == 256*256-5)
+    if (index == 0)
     {
-        printf("Analyzing pixel (%d, %d) - index %d\n", x, y, index);
+        //printf("Analyzing pixel (%d, %d) - index %d\n", x, y, index);
         printf("Analyzing triangle: (%f, %f), (%f, %f), (%f, %f)\n", triangle[0], 
             triangle[1], triangle[2], triangle[3], triangle[4], triangle[5]);
     } 
@@ -32,11 +32,6 @@ __global__ void inTriangle(float* triangle, int* results, int triangleValue){
     float b1 = barycentric(x, y, triangle[0], triangle[1], triangle[2], triangle[3]);
     float b2 = barycentric(x, y, triangle[2], triangle[3], triangle[4], triangle[5]);
     float b3 = barycentric(x, y, triangle[4], triangle[5], triangle[0], triangle[1]);
-
-    if (index < 5 || index == 256*256-5)
-    {
-        printf("Bary results: b1 = %f | b2 = %f | b3 = %f\n\n", b1, b2, b3);
-    } 
 
     bool neg = b1 <= 0 && b2 <= 0 && b3 <= 0;
     bool pos = b1 >= 0 && b2 >= 0 && b3 >= 0;
