@@ -87,11 +87,6 @@ int main(int argc, char** argv) {
     cudaMemcpy(&vertices, dVerts, sizeof(float) * vertCount*3, cudaMemcpyDeviceToHost);
     cudaFree(dVerts);
 
-    for (int i = 0; i < 50; i++){
-        cout << "Vert check: " << vertices[i] << endl;
-    }
-    return 0;
-
     int pointTests[definedSize * definedSize], *dPoints;
     cudaMalloc((void**)&dPoints, sizeof(int) * definedSize * definedSize);
     cudaMemset(dPoints, 0, sizeof(int) * definedSize * definedSize);
