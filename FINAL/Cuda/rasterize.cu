@@ -2,6 +2,7 @@
 
 #include <cuda.h>
 #include <stdio.h>
+#include <cuda_runtime.h>
 #include <iostream>
 #include <chrono>
 #include "pixel.cuh"
@@ -16,6 +17,7 @@ const float padding = 10;
 
 __global__ void adjustValue(float* vertices, int vertexCount, float minX, float minY, float padding, float multiplier){
     int index = threadIdx.x + blockIdx.x * blockDim.x;
+    printf("Printing in kernel %d", index);
     if (index >= vertexCount || index % 3 == 2) return;
     // ignore z for now its not being used
 
