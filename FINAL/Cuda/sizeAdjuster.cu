@@ -1,6 +1,7 @@
 #ifndef SIZEADJUSTER_CUH
 
 #include <cuda.h>
+#include <stdio.h>
 using namespace std;
 
 __global__ void adjustValue(float* vertices, int vertexCount, float minX, float minY, float padding, float multiplier){
