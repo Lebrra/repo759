@@ -123,6 +123,7 @@ int main(int argc, char** argv) {
 
         printf("Analyzing triangle: (%f, %f), (%f, %f), (%f, %f)\n", triangle[0], 
             triangle[1], triangle[2], triangle[3], triangle[4], triangle[5]);
+        printf("Faces: (%d, %d, %d)\n", face1, face2, face3);
         
         cudaMalloc((void**)&dTri, sizeof(float) * 6);
         cudaMemcpy(dTri, &triangle, sizeof(float) * 6, cudaMemcpyHostToDevice);

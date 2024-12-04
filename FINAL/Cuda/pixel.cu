@@ -25,7 +25,7 @@ __global__ void inTriangle(float* triangle, int* results, int triangleValue){
     if (index == 0)
     {
         //printf("Analyzing pixel (%d, %d) - index %d\n", x, y, index);
-        printf("Analyzing triangle: (%f, %f), (%f, %f), (%f, %f)\n", triangle[0], 
+        printf("Analyzing triangle (kernel): (%f, %f), (%f, %f), (%f, %f)\n", triangle[0], 
             triangle[1], triangle[2], triangle[3], triangle[4], triangle[5]);
     } 
 
