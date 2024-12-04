@@ -95,6 +95,7 @@ int main(int argc, char** argv) {
     int validTriangles = 0;
     cout << "Comparing pixels with triangles..." << endl;
     float triangle[6], *dTri;
+    cudaMalloc((void**)&dTri, sizeof(float) * 6);
     
     for(int tri = 0; tri < triangleCount; tri++){
         int face1 = faces[tri * 3];
@@ -116,15 +117,13 @@ int main(int argc, char** argv) {
             }
         validTriangles++;
         
-        cudaMalloc((void**)&dTri, sizeof(float) * 6);
         cudaMemcpy(dTri, &triangle, sizeof(float) * 6, cudaMemcpyHostToDevice);
 
         // do parallelism here
         inTriangle<<<definedSize, definedSize>>>(dTri, dPoints, validTriangles);
         cudaDeviceSynchronize();
-
-        cudaFree(dTri);
     }
+    cudaFree(dTri);
     cout << "Found " << validTriangles << " valid triangles while rasterizing!\n";
 
     cudaMemcpy(&pointTests, dPoints, sizeof(int) * definedSize * definedSize, cudaMemcpyDeviceToHost);
