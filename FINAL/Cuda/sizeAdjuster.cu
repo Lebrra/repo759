@@ -49,6 +49,7 @@ __host__ void adjustSize(float* vertices, int vertexCount, float size, float pad
 
     // apply multiplier to all points (and offset if any points are negative)
     int blocks = ((vertexCount*3) + 256 - 1) / 256;
+    print("applying adjustments using block count: %d\n", blocks);
     adjustValue<<<blocks, 256>>>(vertices, vertexCount, minX, minY, padding, multiplier);
 }
 
