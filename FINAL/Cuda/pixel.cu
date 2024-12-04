@@ -22,7 +22,7 @@ __global__ void inTriangle(float* triangle, int* results, int triangleValue){
 
     int x = threadIdx.x;
     int y = blockIdx.x;
-    if (index < 10 || index == 543) printf("Analyzing pixel (%d, %d)", x, y);
+    if (index < 10 || index == 256*256-5) printf("Analyzing pixel (%d, %d) - index %d\n", x, y, index);
 
     float b1 = barycentric(x, y, triangle[0], triangle[1], triangle[2], triangle[3]);
     float b2 = barycentric(x, y, triangle[2], triangle[3], triangle[4], triangle[5]);
