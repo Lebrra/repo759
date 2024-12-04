@@ -17,7 +17,7 @@ const float padding = 10;
 
 __global__ void adjustValue(float* vertices, int vertexCount, float minX, float minY, float padding, float multiplier){
     int index = threadIdx.x + blockIdx.x * blockDim.x;
-    printf("Printing in kernel %d", index);
+    printf("Printing in kernel %d\n", index);
     if (index >= vertexCount || index % 3 == 2) return;
     // ignore z for now its not being used
 
@@ -32,15 +32,14 @@ __global__ void adjustValue(float* vertices, int vertexCount, float minX, float 
     vertices[index] += padding;
 }
 
-void adjustSize(float* vertices, int vertexCount, float size, float padding){
-    printf("within adjustSize...\n");
+void adjustSize(float* vertices, int vertCount, float size, float padding){
     float minX = 0;
     float maxX = 0;
     float minY = 0;
     float maxY = 0;
 
     // calculate min and max -es
-    for (int i = 0; i < vertexCount; i++) {
+    for (int i = 0; i < vertCount; i++) {
         int x = i * 3;  // x + 1 = y
 
         if (vertices[x] < minX) minX = vertices[x];
@@ -48,7 +47,6 @@ void adjustSize(float* vertices, int vertexCount, float size, float padding){
         if (vertices[x + 1] < minY) minY = vertices[x + 1];
         if (vertices[x + 1] > maxY) maxY = vertices[x + 1];
     }
-    printf("completed min/max...\n");
 
     // create multiplier based off larger difference
     float pointsWidth = maxX - minX;
@@ -61,13 +59,9 @@ void adjustSize(float* vertices, int vertexCount, float size, float padding){
     else { 
         multiplier = (size - padding*2) / pointsHeight;
     }
-
-    printf("ready to calculate blocks...\n");
-
     // apply multiplier to all points (and offset if any points are negative)
-    int blocks = ((vertexCount*3) + 256 - 1) / 256;
-    printf("applying adjustments using block count: %d\n", blocks);
-    adjustValue<<<blocks, 256>>>(vertices, vertexCount, minX, minY, padding, multiplier);
+    int blocks = ((vertCount*3) + 256 - 1) / 256;
+    adjustValue<<<blocks, 256>>>(vertices, vertCount, minX, minY, padding, multiplier);
     cudaDeviceSynchronize();
 }
 
@@ -114,43 +108,7 @@ int main(int argc, char** argv) {
     cudaMemcpy(dVerts, &vertices, sizeof(float) * vertCount*3, cudaMemcpyHostToDevice);
 
     cout << "Calling adjust..." << endl;
-    //adjustSize(dVerts, vertCount, definedSize, padding);
-    printf("within adjustSize...\n");
-    float minX = 0;
-    float maxX = 0;
-    float minY = 0;
-    float maxY = 0;
-
-    // calculate min and max -es
-    for (int i = 0; i < vertCount; i++) {
-        int x = i * 3;  // x + 1 = y
-
-        if (vertices[x] < minX) minX = vertices[x];
-        if (vertices[x] > maxX) maxX = vertices[x];
-        if (vertices[x + 1] < minY) minY = vertices[x + 1];
-        if (vertices[x + 1] > maxY) maxY = vertices[x + 1];
-    }
-    printf("completed min/max...\n");
-
-    // create multiplier based off larger difference
-    float pointsWidth = maxX - minX;
-    float pointsHeight = maxY - minY;
-
-    float multiplier;
-    if (pointsWidth > pointsHeight) {
-        multiplier = (definedSize - padding*2) / pointsWidth;
-    }
-    else { 
-        multiplier = (definedSize - padding*2) / pointsHeight;
-    }
-
-    printf("ready to calculate blocks...\n");
-
-    // apply multiplier to all points (and offset if any points are negative)
-    int blocks = ((vertCount*3) + 256 - 1) / 256;
-    printf("applying adjustments using block count: %d\n", blocks);
-    adjustValue<<<blocks, 256>>>(vertices, vertCount, minX, minY, padding, multiplier);
-    cudaDeviceSynchronize();
+    adjustSize(dVerts, vertCount, definedSize, padding);
 
     cout << "Completed adjusting..." << endl;
     cudaMemcpy(&vertices, dVerts, sizeof(float) * vertCount*3, cudaMemcpyDeviceToHost);
