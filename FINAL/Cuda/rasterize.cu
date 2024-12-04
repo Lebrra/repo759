@@ -71,8 +71,8 @@ int main(int argc, char** argv) {
     float pointsWidth = maxX - minX;
     float pointsHeight = maxY - minY;
 
-    cout << "Mins: x = " << minX << " | y = " << minX << "ms\n";
-    cout << "Maxes: x = " << maxX << " | y = " << maxY << "ms\n";
+    cout << "Mins: x = " << minX << " | y = " << minX << "\n";
+    cout << "Maxes: x = " << maxX << " | y = " << maxY << "\n";
     cout << "Width = " << pointsWidth << " | Height = " << pointsHeight << endl;
 
     float multiplier;
