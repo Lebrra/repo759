@@ -3,13 +3,85 @@
 #include <cuda.h>
 #include <iostream>
 #include <chrono>
-#include "filehandler.cuh"
 #include "pixel.cuh"
 #include "sizeAdjuster.cuh"
 
 // hardset output height and width
 const int definedSize = 256;
 const float padding = 10;
+
+// filehandler methods internal for easier cuda implementation:
+void getVertexCount(string fileName, int* count){
+    ifstream readFile(fileName + "_vertices.txt");
+    string line;
+    const string delim = ", ";
+
+    getline(readFile, line);
+    count[0] = stoi(line);
+}
+
+void readVertices(string fileName, float* vertices) {
+    ifstream readFile(fileName + "_vertices.txt");
+    string line;
+    const string delim = ", ";
+
+    getline(readFile, line);
+    int vertCount = stoi(line);
+
+    for (int i = 0; i < vertCount; i++){
+        getline(readFile, line);
+
+        // each line is a 3D coordinate: "x, y, z"
+        vertices[3 * i] = stof(line.substr(0, line.find(delim)));
+        line = line.substr(line.find(delim) + 2, line.length());
+        vertices[3 * i + 1] = stof(line.substr(0, line.find(delim)));
+        line = line.substr(line.find(delim) + 2, line.length());
+        vertices[3 * i + 2] = stof(line);
+    }
+}
+
+void getFaceCount(string fileName, int* count){
+    ifstream readFile(fileName + "_faces.txt");
+    string line;
+    const string delim = ", ";
+
+    getline(readFile, line);
+    count[0] = stoi(line);
+}
+
+void readFaces(string fileName, int* faces) {
+    ifstream readFile(fileName + "_faces.txt");
+    string line;
+    const string delim = ", ";
+
+    getline(readFile, line);
+    int faceCount = stoi(line);
+
+    for (int i = 0; i < faceCount; i++){
+        getline(readFile, line);
+
+        // each line is 3 indices of a coordinate from vertices that make a triangle: "int, int, int"
+        faces[3 * i] = stoi(line.substr(0, line.find(delim)));
+        line = line.substr(line.find(delim) + 2, line.length());
+        faces[3 * i + 1] = stoi(line.substr(0, line.find(delim)));
+        line = line.substr(line.find(delim) + 2, line.length());
+        faces[3 * i + 2] = stoi(line);
+    }
+}
+
+void readyOutputFile(string fileName, long time){
+    ofstream of;
+    of.open(fileName + "_output.txt", ofstream::out | ofstream::trunc);
+    of << time << endl;
+    of.close();
+}
+
+void writeVertex(string fileName, float* vertex){
+    fstream f;
+    f.open(fileName + "_output.txt", ios::app);
+    f << vertex[0] << ", " << vertex[1] << ", " << vertex[2] << endl;
+    f.close();
+}
 
 int main(int argc, char** argv) {
     if (argc <= 1){
@@ -31,31 +103,27 @@ int main(int argc, char** argv) {
     cout << "Processing file: " << fileName << endl;
 
     // gather data:
-    int vertCount = 0;
-    int triangleCount = 0;
-    int *dVertCount, *dTriCount;
-    cudaMalloc((void**)&dVertCount, sizeof(int));
-    cudaMalloc((void**)&dTriCount, sizeof(int));
-    getVertexCount(fileName, dVertCount);
-    getFaceCount(fileName, dTriCount);
-    cudaMemcpy(&vertCount, dVertCount, sizeof(int), cudaMemcpyDeviceToHost);
-    cudaMemcpy(&triangleCount, dTriCount, sizeof(int), cudaMemcpyDeviceToHost);
-    cudaFree(dVertCount);
-    cudaFree(dTriCount);
+    cout << "Getting vertex count..." << endl;
+    int vertCount = getVertexCount(fileName);
+    cout << "Getting face count..." << endl;
+    int triangleCount = getFaceCount(fileName);
 
-    float vertices[vertCount*3], *dVerts;
-    int faces[triangleCount*3], *dFaces;
-    cudaMalloc((void**)&dVerts, sizeof(float) * vertCount*3);
-    cudaMalloc((void**)&dFaces, sizeof(int) * triangleCount*3);
-    readVertices(fileName, dVerts);
-    readFaces(fileName, dFaces);
-    //cudaMemcpy(&vertices, dVerts, sizeof(float) * vertCount*3, cudaMemcpyDeviceToHost);
-    cudaMemcpy(&faces, dFaces, sizeof(int) * triangleCount*3, cudaMemcpyDeviceToHost);
-    cudaFree(dFaces);
+    cout << "Alotting pointers..." << endl;
+    float* vertices = (float*)malloc(sizeof(float) * vertCount * 3);
+    int* faces = (int*)malloc(sizeof(int) * triangleCount * 3);
+    float *dVerts;
+    
+    cout << "Reading all vertices..." << endl;
+    readVertices(fileName, vertices);
+    cout << "Reading all faces..." << endl;
+    readFaces(fileName, faces);
 
     cout << "This file has " << vertCount << " vertices and " << triangleCount << " triangles!" << endl;
 
     cout << "Adjusting to size..." << endl;
+    cudaMalloc((void**)&dVerts, sizeof(float) * vertCount*3);
+    cudaMemcpy(dVerts, &vertices, sizeof(float) * vertCount*3, cudaMemcpyHostToDevice);
+
     adjustSize(dVerts, vertCount, definedSize, padding);
     cudaMemcpy(&vertices, dVerts, sizeof(float) * vertCount*3, cudaMemcpyDeviceToHost);
     cudaFree(dVerts);
@@ -92,7 +160,6 @@ int main(int argc, char** argv) {
 
         // do parallelism here
         inTriangle<<<definedSize, definedSize>>>(dTri, dPoints, validTriangles);
-        //cudaMemcpy(&pointTests, dPoints, sizeof(int) * definedSize * definedSize, cudaMemcpyDeviceToHost);
     }
     cudaFree(dTri);
 
