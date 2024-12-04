@@ -71,6 +71,10 @@ int main(int argc, char** argv) {
     float pointsWidth = maxX - minX;
     float pointsHeight = maxY - minY;
 
+    cout << "Mins: x = " << minX << " | y = " << minX << "ms\n";
+    cout << "Maxes: x = " << maxX << " | y = " << maxY << "ms\n";
+    cout << "Width = " << pointsWidth << " | Height = " << pointsHeight << endl;
+
     float multiplier;
     if (pointsWidth > pointsHeight) {
         multiplier = (definedSize - padding*2) / pointsWidth;
