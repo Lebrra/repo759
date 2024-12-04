@@ -71,10 +71,6 @@ int main(int argc, char** argv) {
     float pointsWidth = maxX - minX;
     float pointsHeight = maxY - minY;
 
-    cout << "Mins: x = " << minX << " | y = " << minX << "\n";
-    cout << "Maxes: x = " << maxX << " | y = " << maxY << "\n";
-    cout << "Width = " << pointsWidth << " | Height = " << pointsHeight << endl;
-
     float multiplier;
     if (pointsWidth > pointsHeight) {
         multiplier = (definedSize - padding*2) / pointsWidth;
@@ -90,6 +86,11 @@ int main(int argc, char** argv) {
 
     cudaMemcpy(&vertices, dVerts, sizeof(float) * vertCount*3, cudaMemcpyDeviceToHost);
     cudaFree(dVerts);
+
+    for (int i = 0; i < 50; i++){
+        cout << "Vert check: " << vertices[i] << endl;
+    }
+    return 0;
 
     int pointTests[definedSize * definedSize], *dPoints;
     cudaMalloc((void**)&dPoints, sizeof(int) * definedSize * definedSize);
