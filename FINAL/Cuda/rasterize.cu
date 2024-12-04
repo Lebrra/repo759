@@ -1,10 +1,9 @@
 // inspiration: https://github.com/ssloy/tinyrenderer/wiki/Lesson-2:-Triangle-rasterization-and-back-face-culling
 
 #include <cuda.h>
+#include <stdio.h>
 #include <iostream>
 #include <chrono>
-#include <fstream>
-#include <string>
 #include "pixel.cuh"
 //#include "sizeAdjuster.cuh"
 #include "filehandler.cuh"
