@@ -149,7 +149,7 @@ int main(int argc, char** argv) {
     // apply multiplier to all points (and offset if any points are negative)
     int blocks = ((vertCount*3) + 256 - 1) / 256;
     printf("applying adjustments using block count: %d\n", blocks);
-    adjustValue<<<blocks, 256>>>(vertices, vertexCount, minX, minY, padding, multiplier);
+    adjustValue<<<blocks, 256>>>(vertices, vertCount, minX, minY, padding, multiplier);
     cudaDeviceSynchronize();
 
     cout << "Completed adjusting..." << endl;
