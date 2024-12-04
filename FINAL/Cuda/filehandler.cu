@@ -5,13 +5,13 @@ using namespace std;
 
 #ifndef FILEHANDLER_CUH
 
-__host__ void getVertexCount(string fileName, int* count){
+__host__ int getVertexCount(string fileName, int* count){
     ifstream readFile(fileName + "_vertices.txt");
     string line;
     const string delim = ", ";
 
     getline(readFile, line);
-    count[0] = stoi(line);
+    return stoi(line);
 }
 
 __host__ void readVertices(string fileName, float* vertices) {
@@ -34,13 +34,13 @@ __host__ void readVertices(string fileName, float* vertices) {
     }
 }
 
-__host__ void getFaceCount(string fileName, int* count){
+__host__ int getFaceCount(string fileName){
     ifstream readFile(fileName + "_faces.txt");
     string line;
     const string delim = ", ";
 
     getline(readFile, line);
-    count[0] = stoi(line);
+    return stoi(line);
 }
 
 __host__ void readFaces(string fileName, int* faces) {

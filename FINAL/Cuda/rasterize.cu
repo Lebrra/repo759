@@ -15,13 +15,13 @@ const int definedSize = 256;
 const float padding = 10;
 
 // filehandler methods internal for easier cuda implementation:
-void getVertexCount(string fileName, int* count){
+void getVertexCount(string fileName){
     ifstream readFile(fileName + "_vertices.txt");
     string line;
     const string delim = ", ";
 
     getline(readFile, line);
-    count[0] = stoi(line);
+    return stoi(line);
 }
 
 void readVertices(string fileName, float* vertices) {
@@ -44,13 +44,13 @@ void readVertices(string fileName, float* vertices) {
     }
 }
 
-void getFaceCount(string fileName, int* count){
+void getFaceCount(string fileName){
     ifstream readFile(fileName + "_faces.txt");
     string line;
     const string delim = ", ";
 
     getline(readFile, line);
-    count[0] = stoi(line);
+    return stoi(line);
 }
 
 void readFaces(string fileName, int* faces) {

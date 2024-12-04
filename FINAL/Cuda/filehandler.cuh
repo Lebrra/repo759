@@ -5,13 +5,13 @@
 using namespace std;
 
 // reads the first line of [fileName]_vertices.txt generated from stlToTxt.py
-__host__ void getVertexCount(string fileName, int* count);
+__host__ int getVertexCount(string fileName);
 
 // reads in a list of x, y, z vertices from a file named [fileName]_vertices.txt generated from stlToTxt.py
 __host__ void readVertices(string fileName, float* vertices);
 
 // reads the first line of [fileName]_faces.txt generated from stlToTxt.py
-__host__ void getFaceCount(string fileName, int* count);
+__host__ int getFaceCount(string fileName);
 
 // reads in a list of pairs of 3 indices that form a triangle from a file named [fileName]_faces.txt generated from stlToTxt.py
 __host__ void readFaces(string fileName, int* faces);
