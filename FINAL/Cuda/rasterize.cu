@@ -3,8 +3,12 @@
 #include <cuda.h>
 #include <iostream>
 #include <chrono>
+#include <fstream>
+#include <string>
 #include "pixel.cuh"
 #include "sizeAdjuster.cuh"
+
+using namespace std;
 
 // hardset output height and width
 const int definedSize = 256;
