@@ -98,8 +98,7 @@ int main(int argc, char** argv) {
     // do math
     int validTriangles = 0;
     cout << "Comparing pixels with triangles..." << endl;
-    float* triangle = (float*)malloc(sizeof(float) * 6);
-    float *dTri;
+    float triangle[6], *dTri;
     
     for(int tri = 0; tri < triangleCount; tri++){
         int face1 = faces[tri * 3];
@@ -123,7 +122,7 @@ int main(int argc, char** argv) {
 
         printf("Analyzing triangle: (%f, %f), (%f, %f), (%f, %f)\n", triangle[0], 
             triangle[1], triangle[2], triangle[3], triangle[4], triangle[5]);
-        printf("Faces: (%d, %d, %d)\n", face1, face2, face3);
+        printf("Faces: (%d, %d, %d)\n", face1, face2, face3);    
         
         cudaMalloc((void**)&dTri, sizeof(float) * 6);
         cudaMemcpy(dTri, &triangle, sizeof(float) * 6, cudaMemcpyHostToDevice);
