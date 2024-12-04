@@ -32,7 +32,7 @@ __global__ void adjustValue(float* vertices, int vertexCount, float minX, float 
     vertices[index] += padding;
 }
 
-__host__ void adjustSize(float* vertices, int vertexCount, float size, float padding){
+void adjustSize(float* vertices, int vertexCount, float size, float padding){
     printf("within adjustSize...\n");
     float minX = 0;
     float maxX = 0;
