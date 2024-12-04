@@ -12,4 +12,4 @@ module load gcc/11.3.0
 nvcc rasterize.cu filehandler.cu pixel.cu sizeAdjuster.cu -Xcompiler -O3 -Xcompiler -Wall -Xptxas -O3 -std c++17 -o final
 date
 
-./final testShape1
+./final $1
