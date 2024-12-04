@@ -32,7 +32,7 @@ __global__ void adjustValue(float* vertices, int vertexCount, float minX, float 
     vertices[index] += padding;
 }
 
-void adjustSize(float* vertices, int vertCount, float size, float padding){
+__host__ void adjustSize(float* vertices, int vertCount, float size, float padding){
     float minX = 0;
     float maxX = 0;
     float minY = 0;
@@ -90,12 +90,6 @@ int main(int argc, char** argv) {
 
     float* vertices = (float*)malloc(sizeof(float) * vertCount * 3);
     int* faces = (int*)malloc(sizeof(int) * triangleCount * 3);
-    //float vertices[vertCount*3]; 
-    //int faces[triangleCount*3];
-    //for(int i = 0; i < max(vertCount, triangleCount)*3; i++){
-    //    if (i < vertCount*3) vertices[i] = i;
-    //    if (i < triangleCount*3) faces[i] = i;
-    //}
     float *dVerts;
     
     readVertices(fileName, vertices);
@@ -146,6 +140,7 @@ int main(int argc, char** argv) {
 
         // do parallelism here
         inTriangle<<<definedSize, definedSize>>>(dTri, dPoints, validTriangles);
+        cudaDeviceSynchronize();
     }
     cudaFree(dTri);
 
