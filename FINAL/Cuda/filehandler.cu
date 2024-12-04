@@ -5,7 +5,7 @@ using namespace std;
 
 #ifndef FILEHANDLER_CUH
 
-__host__ int getVertexCount(string fileName, int* count){
+__host__ int getVertexCount(string fileName){
     ifstream readFile(fileName + "_vertices.txt");
     string line;
     const string delim = ", ";

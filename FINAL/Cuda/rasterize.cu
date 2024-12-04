@@ -15,20 +15,6 @@ using namespace std;
 const int definedSize = 256;
 const float padding = 10;
 
-void readyOutputFile(string fileName, long time){
-    ofstream of;
-    of.open(fileName + "_output.txt", ofstream::out | ofstream::trunc);
-    of << time << endl;
-    of.close();
-}
-
-void writeVertex(string fileName, float* vertex){
-    fstream f;
-    f.open(fileName + "_output.txt", ios::app);
-    f << vertex[0] << ", " << vertex[1] << ", " << vertex[2] << endl;
-    f.close();
-}
-
 int main(int argc, char** argv) {
     if (argc <= 1){
         cout << "Please include a filename (excluding the '_vertices.txt' or '_faces.txt') to rasterize!";
