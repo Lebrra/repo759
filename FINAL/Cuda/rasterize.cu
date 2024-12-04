@@ -80,6 +80,7 @@ int main(int argc, char** argv) {
     }
     // apply multiplier to all points (and offset if any points are negative)
     int blocks = ((vertCount*3) + 256 - 1) / 256;
+    cout << "Using kernel to adjust vertices with " << blocks << " blocks..." << endl;
     adjustValue<<<blocks, 256>>>(vertices, vertCount, minX, minY, padding, multiplier);
     cudaDeviceSynchronize();
         // end of adjust size function
