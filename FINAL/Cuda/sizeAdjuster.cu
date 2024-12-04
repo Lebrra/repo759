@@ -3,8 +3,9 @@
 #include <cuda.h>
 using namespace std;
 
-__global__ void adjustValueB(float* vertices, int vertexCount, float minX, float minY, float padding, float multiplier){
+__global__ void adjustValue(float* vertices, int vertexCount, float minX, float minY, float padding, float multiplier){
     int index = threadIdx.x + blockIdx.x * blockDim.x;
+    printf("Printing in kernel %d\n", index);
     if (index >= vertexCount || index % 3 == 2) return;
     // ignore z for now its not being used
 

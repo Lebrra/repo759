@@ -6,7 +6,7 @@
 #include <iostream>
 #include <chrono>
 #include "pixel.cuh"
-//#include "sizeAdjuster.cuh"
+#include "sizeAdjuster.cuh"
 #include "filehandler.cuh"
 
 using namespace std;
@@ -14,56 +14,6 @@ using namespace std;
 // hardset output height and width
 const int definedSize = 256;
 const float padding = 10;
-
-__global__ void adjustValue(float* vertices, int vertexCount, float minX, float minY, float padding, float multiplier){
-    int index = threadIdx.x + blockIdx.x * blockDim.x;
-    printf("Printing in kernel %d\n", index);
-    if (index >= vertexCount || index % 3 == 2) return;
-    // ignore z for now its not being used
-
-    if (index % 3 == 0 && minX < 0){
-        vertices[index] -= minX;
-    }
-    else if (index % 3 == 1 && minY < 0){
-        vertices[index] -= minY; 
-    }
-
-    vertices[index] *= multiplier;
-    vertices[index] += padding;
-}
-
-__host__ void adjustSize(float* vertices, int vertCount, float size, float padding){
-    float minX = 0;
-    float maxX = 0;
-    float minY = 0;
-    float maxY = 0;
-
-    // calculate min and max -es
-    for (int i = 0; i < vertCount; i++) {
-        int x = i * 3;  // x + 1 = y
-
-        if (vertices[x] < minX) minX = vertices[x];
-        if (vertices[x] > maxX) maxX = vertices[x];
-        if (vertices[x + 1] < minY) minY = vertices[x + 1];
-        if (vertices[x + 1] > maxY) maxY = vertices[x + 1];
-    }
-
-    // create multiplier based off larger difference
-    float pointsWidth = maxX - minX;
-    float pointsHeight = maxY - minY;
-
-    float multiplier;
-    if (pointsWidth > pointsHeight) {
-        multiplier = (size - padding*2) / pointsWidth;
-    }
-    else { 
-        multiplier = (size - padding*2) / pointsHeight;
-    }
-    // apply multiplier to all points (and offset if any points are negative)
-    int blocks = ((vertCount*3) + 256 - 1) / 256;
-    adjustValue<<<blocks, 256>>>(vertices, vertCount, minX, minY, padding, multiplier);
-    cudaDeviceSynchronize();
-}
 
 int main(int argc, char** argv) {
     if (argc <= 1){
@@ -101,10 +51,37 @@ int main(int argc, char** argv) {
     cudaMalloc((void**)&dVerts, sizeof(float) * vertCount*3);
     cudaMemcpy(dVerts, &vertices, sizeof(float) * vertCount*3, cudaMemcpyHostToDevice);
 
-    cout << "Calling adjust..." << endl;
-    adjustSize(dVerts, vertCount, definedSize, padding);
+    float minX = 0;
+    float maxX = 0;
+    float minY = 0;
+    float maxY = 0;
 
-    cout << "Completed adjusting..." << endl;
+    // calculate min and max -es
+    for (int i = 0; i < vertCount; i++) {
+        int x = i * 3;  // x + 1 = y
+
+        if (vertices[x] < minX) minX = vertices[x];
+        if (vertices[x] > maxX) maxX = vertices[x];
+        if (vertices[x + 1] < minY) minY = vertices[x + 1];
+        if (vertices[x + 1] > maxY) maxY = vertices[x + 1];
+    }
+
+    // create multiplier based off larger difference
+    float pointsWidth = maxX - minX;
+    float pointsHeight = maxY - minY;
+
+    float multiplier;
+    if (pointsWidth > pointsHeight) {
+        multiplier = (definedSize - padding*2) / pointsWidth;
+    }
+    else { 
+        multiplier = (definedSize - padding*2) / pointsHeight;
+    }
+    // apply multiplier to all points (and offset if any points are negative)
+    int blocks = ((vertCount*3) + 256 - 1) / 256;
+    adjustValue<<<blocks, 256>>>(vertices, vertCount, minX, minY, padding, multiplier);
+    cudaDeviceSynchronize();
+
     cudaMemcpy(&vertices, dVerts, sizeof(float) * vertCount*3, cudaMemcpyDeviceToHost);
     cudaFree(dVerts);
 
