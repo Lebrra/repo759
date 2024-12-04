@@ -3,7 +3,7 @@
 #SBATCH -p instruction
 #SBATCH -J FINAL_Task1
 #SBATCH -o FINAL_1.out -e FINAL_1.err
-#SBATCH -t 0-00:05:00
+#SBATCH -t 0-00:10:00
 #SBATCH --ntasks=1
 #SBATCH --gpus-per-task=1
 
