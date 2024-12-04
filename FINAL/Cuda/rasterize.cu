@@ -32,6 +32,7 @@ __global__ void adjustValue(float* vertices, int vertexCount, float minX, float 
 }
 
 __host__ void adjustSize(float* vertices, int vertexCount, float size, float padding){
+    printf("within adjustSize...\n");
     float minX = 0;
     float maxX = 0;
     float minY = 0;
@@ -46,6 +47,7 @@ __host__ void adjustSize(float* vertices, int vertexCount, float size, float pad
         if (vertices[x + 1] < minY) minY = vertices[x + 1];
         if (vertices[x + 1] > maxY) maxY = vertices[x + 1];
     }
+    printf("completed min/max...\n");
 
     // create multiplier based off larger difference
     float pointsWidth = maxX - minX;
@@ -59,10 +61,13 @@ __host__ void adjustSize(float* vertices, int vertexCount, float size, float pad
         multiplier = (size - padding*2) / pointsHeight;
     }
 
+    printf("ready to calculate blocks...\n");
+
     // apply multiplier to all points (and offset if any points are negative)
     int blocks = ((vertexCount*3) + 256 - 1) / 256;
     printf("applying adjustments using block count: %d\n", blocks);
     adjustValue<<<blocks, 256>>>(vertices, vertexCount, minX, minY, padding, multiplier);
+    cudaDeviceSynchronize();
 }
 
 int main(int argc, char** argv) {
@@ -88,18 +93,18 @@ int main(int argc, char** argv) {
     int vertCount = getVertexCount(fileName);
     int triangleCount = getFaceCount(fileName);
 
-    //float* vertices = (float*)malloc(sizeof(float) * vertCount * 3);
-    //int* faces = (int*)malloc(sizeof(int) * triangleCount * 3);
-    float vertices[vertCount*3]; 
-    int faces[triangleCount*3];
-    for(int i = 0; i < max(vertCount, triangleCount)*3; i++){
-        if (i < vertCount*3) vertices[i] = i;
-        if (i < triangleCount*3) faces[i] = i;
-    }
+    float* vertices = (float*)malloc(sizeof(float) * vertCount * 3);
+    int* faces = (int*)malloc(sizeof(int) * triangleCount * 3);
+    //float vertices[vertCount*3]; 
+    //int faces[triangleCount*3];
+    //for(int i = 0; i < max(vertCount, triangleCount)*3; i++){
+    //    if (i < vertCount*3) vertices[i] = i;
+    //    if (i < triangleCount*3) faces[i] = i;
+    //}
     float *dVerts;
     
-    //readVertices(fileName, vertices);
-    //readFaces(fileName, faces);
+    readVertices(fileName, vertices);
+    readFaces(fileName, faces);
 
     cout << "This file has " << vertCount << " vertices and " << triangleCount << " triangles!" << endl;
 
@@ -107,7 +112,9 @@ int main(int argc, char** argv) {
     cudaMalloc((void**)&dVerts, sizeof(float) * vertCount*3);
     cudaMemcpy(dVerts, &vertices, sizeof(float) * vertCount*3, cudaMemcpyHostToDevice);
 
+    cout << "Calling adjust..." << endl;
     adjustSize(dVerts, vertCount, definedSize, padding);
+    cout << "Completed adjusting..." << endl;
     cudaMemcpy(&vertices, dVerts, sizeof(float) * vertCount*3, cudaMemcpyDeviceToHost);
     cudaFree(dVerts);
 
