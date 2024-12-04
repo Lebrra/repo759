@@ -137,6 +137,7 @@ int main(int argc, char** argv) {
 	auto timePassed = chrono::duration_cast<std::chrono::microseconds>(end - start);
 
     // write
+    int colorCounter = 0;
     cout << "Rasterization completed after " << (timePassed.count() / 1000) << "ms!\nWriting results...\n";
     float* pixel = (float*)malloc(sizeof(float) * 3);
     readyOutputFile(fileName, (timePassed.count() / 1000));
@@ -149,6 +150,7 @@ int main(int argc, char** argv) {
             pixel[0] = colors[(pointTests[i] - 1)*3];
             pixel[1] = colors[(pointTests[i] - 1)*3 + 1];
             pixel[2] = colors[(pointTests[i] - 1)*3 + 2];
+            colorCounter++;
         }
         if (i < 5){
             cout << "front pixel debug: (" << pixel[0] << ", " << pixel[1] << ", " << pixel[2] << ")\n";
@@ -165,6 +167,7 @@ int main(int argc, char** argv) {
     auto realEnd = chrono::steady_clock::now();
 	timePassed = chrono::duration_cast<std::chrono::microseconds>(realEnd - start);
     cout << "Complete process took " << (timePassed.count() / 1000) << "ms\n";
+    cout << colorCounter << " pixels were colored!\n";
 
     return 0;
 }
