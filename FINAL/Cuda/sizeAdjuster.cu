@@ -6,7 +6,7 @@ using namespace std;
 
 __global__ void adjustValue(float* vertices, int vertexCount, float minX, float minY, float padding, float multiplier){
     int index = threadIdx.x + blockIdx.x * blockDim.x;
-    if (index >= vertexCount || index % 3 == 2) return;
+    if (index >= vertexCount*3 || index % 3 == 2) return;
     // ignore z for now its not being used
 
     if (index % 3 == 0 && minX < 0){
