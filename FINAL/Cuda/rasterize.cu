@@ -98,7 +98,8 @@ int main(int argc, char** argv) {
     // do math
     int validTriangles = 0;
     cout << "Comparing pixels with triangles..." << endl;
-    float triangle[6], *dTri;
+    float* triangle = (float*)malloc(sizeof(float) * 6);
+    float *dTri;
     
     for(int tri = 0; tri < triangleCount; tri++){
         int face1 = faces[tri * 3];
