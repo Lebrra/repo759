@@ -67,9 +67,13 @@ int main(int argc, char** argv) {
         if (vertices[x + 1] > maxY) maxY = vertices[x + 1];
     }
 
+    cout << "Found mins and maxes!" << endl;
+
     // create multiplier based off larger difference
     float pointsWidth = maxX - minX;
     float pointsHeight = maxY - minY;
+
+    cout << "Found point dimentions!" << endl;
 
     float multiplier;
     if (pointsWidth > pointsHeight) {
@@ -78,6 +82,8 @@ int main(int argc, char** argv) {
     else { 
         multiplier = (definedSize - padding*2) / pointsHeight;
     }
+    cout << "Multiplier created" << endl;
+
     // apply multiplier to all points (and offset if any points are negative)
     int blocks = ((vertCount*3) + 256 - 1) / 256;
     cout << "Using kernel to adjust vertices with " << blocks << " blocks..." << endl;
