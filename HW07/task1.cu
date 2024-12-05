@@ -31,14 +31,17 @@ void doMatmul(int n, int blockSize){
     dim3 dimGrid(n/dimBlock.x, n/dimBlock.y);
 
     // do math:
-    switch(typeof(T)){
-        case int:
+    switch(sizeof(T)){
+        case sizeof(int):
+            cout << "Calculating type of " << typeof(T) << endl;
             matmul_1<<dimGrid, dimBlock>>(dA, dB, dC, n, blockSize);
             break;
-        case float:
+        case sizeof(float):
+            cout << "Calculating type of " << typeof(T) << endl;
             matmul_2<<dimGrid, dimBlock>>(dA, dB, dC, n, blockSize);
             break;
-        case double:
+        case sizeof(double):
+            cout << "Calculating type of " << typeof(T) << endl;
             matmul_3<<dimGrid, dimBlock>>(dA, dB, dC, n, blockSize);
             break;
         default:
