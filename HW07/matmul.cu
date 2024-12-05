@@ -22,7 +22,7 @@ __global__ void matmul(const int *A, const int *B, int *C, unsigned int n, unsig
 
     int cSub = 0;
     
-    extern __shared__ int shared[];
+    __shared__ int shared[][];
     //__shared__ int Bs[][];
 
     int* As = (int*)shared;
@@ -46,7 +46,7 @@ __host__ void matmul_1(const int *A, const int *B, int *C, unsigned int n,
                        unsigned int block_dim){
     dim3 dimBlock(block_dim, block_dim);
     dim3 dimGrid(n/dimBlock.x, n/dimBlock.y);
-    matmul<<dimGrid, dimBlock, n*n*2 * sizeof(int)>>(A, B, C, n, block_dim);
+    matmul<<<dimGrid, dimBlock>>>(A, B, C, n, block_dim);
     cudaDeviceSynchronize();
 }
 
