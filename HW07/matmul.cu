@@ -22,19 +22,16 @@ __global__ void matmul(const int *A, const int *B, int *C, unsigned int n, unsig
 
     int cSub = 0;
     
-    extern __shared__ int shared[10][10];
-    //__shared__ int Bs[][];
-
-    int* As = (int*)shared;
-    int* Bs = (int*)&As[n*n];
+    extern __shared__ int As[1000][1000];
+    extern __shared__ int Bs[1000][1000];
 
     for (int a = aStart, b = bStart; a <= aEnd; a += aStep, b += bStep){
-        As[n * ty + tx] = A[a + n * ty + tx];
-        Bs[n * ty + tx] = B[b + n * ty + tx];
+        As[ty][tx] = A[a + n * ty + tx];
+        Bs[ty][tx] = B[b + n * ty + tx];
         __syncthreads();
 
         for (int k = 0; k < block_dim; k++)
-            cSub += As[ty + n *k] * Bs[k + n * tx];
+            cSub += As[ty][k] * Bs[k][tx];
         __syncthreads();
     }
 
