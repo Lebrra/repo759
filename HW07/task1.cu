@@ -28,16 +28,16 @@ void doMatmul(int n, int blockSize){
 
     // do math:
     cout << "Switch time\n";
-    switch(typeof(T)){
-        case int:
+    switch(sizeof(T)){
+        case sizeof(int):
             cout << "Calculating type: int" << endl;
             matmul_1(dA, dB, dC, n, blockSize);
             break;
-        case float:
+        case sizeof(float):
             cout << "Calculating type: float" << endl;
             matmul_2(dA, dB, dC, n, blockSize);
             break;
-        case double:
+        case sizeof(double):
             cout << "Calculating type: double" << endl;
             matmul_3(dA, dB, dC, n, blockSize);
             break;
