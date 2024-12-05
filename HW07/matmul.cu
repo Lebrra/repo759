@@ -6,8 +6,8 @@ using namespace std;
 
 // (the difference is types of data)
 
-//template <typename T>
-__global__ void matmul(const int *A, const int *B, int *C, unsigned int n, unsigned int block_dim){
+template <typename T>
+__global__ void matmul(const T *A, const T *B, T *C, unsigned int n, unsigned int block_dim){
     int bx = blockIdx.x;
     int by = blockIdx.y;
     int tx = threadIdx.x;
@@ -23,11 +23,11 @@ __global__ void matmul(const int *A, const int *B, int *C, unsigned int n, unsig
     int bStart = block_dim * bx;
     int bStep = block_dim * n;
 
-    int cSub = 0;
+    T cSub = 0;
     
-    extern __shared__ int shared[];
-    int* As = (int*)shared;
-    int* Bs = (int*)&As[n*n];  
+    extern __shared__ T shared[];
+    T* As = (T*)shared;
+    T* Bs = (T*)&As[n*n];  
 
     for (int a = aStart, b = bStart; a <= aEnd; a += aStep, b += bStep){
         if(ty < 50 && tx < 50){
@@ -52,7 +52,7 @@ __host__ void matmul_1(const int *A, const int *B, int *C, unsigned int n,
                        unsigned int block_dim){
     dim3 dimBlock(block_dim, block_dim);
     dim3 dimGrid(n/dimBlock.x, n/dimBlock.y);
-    matmul<<<dimGrid, dimBlock, block_dim*block_dim*2 * sizeof(int)>>>(A, B, C, n, block_dim);
+    matmul<int><<<dimGrid, dimBlock, block_dim*block_dim*2 * sizeof(int)>>>(A, B, C, n, block_dim);
     cudaDeviceSynchronize();
 }
 
