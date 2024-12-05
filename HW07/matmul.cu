@@ -7,7 +7,7 @@ using namespace std;
 // (the difference is types of data)
 
 template <typename T>
-__global__ void matmul(const T *A, const T *B, T *C, unsinged int n, unsigned int block_dim){
+__global__ void matmul(const T *A, const T *B, T *C, unsigned int n, unsigned int block_dim){
     int bx = blockIdx.x;
     int by = blockIdx.y;
     int tx = threadIdx.x;
