@@ -20,17 +20,17 @@ __global__ void matmul(const int *A, const int *B, int *C, unsigned int n, unsig
     int bStart = block_dim * bx;
     int bStep = block_dim * n;
 
-    T cSub = 0;
+    int cSub = 0;
     
-    __shared__ T As[block_dim][block_dim];
-    __shared__ T Bs[block_dim][block_dim];
+    __shared__ int As[block_dim][block_dim];
+    __shared__ int Bs[block_dim][block_dim];
 
     for (int a = aStart, b = bStart; a <= aEnd; a += aStep, b += bStep){
         As[ty][tx] = A[a + n * ty + tx];
         Bs[ty][tx] = B[b + n * ty + tx];
         __syncthreads();
 
-        for (int k = 0; i < block_dim; k++)
+        for (int k = 0; k < block_dim; k++)
             cSub += As[ty][k] * Bs[k][tx];
         __syncthreads();
     }
