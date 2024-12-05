@@ -2,27 +2,52 @@
 
 // (the difference is types of data)
 
+template <typename T>
+
+__device__ void matmul(const T *A, const T *B, T *C, unsinged int n, unsigned int block_dim){
+    int bx = blockIdx.x;
+    int by = blockIdx.y;
+    int tx = threadIdx.x;
+    int ty = threadIdx.y;
+
+    int aStart = n * block_dim * by;
+    int aEnd = aStart + n - 1;
+    int aStep = block_dim;
+
+    int bStart = block_dim * bx;
+    int bStep = block_dim * n;
+
+    T cSub = 0;
+    
+    __shared__ T As[block_dim][block_dim];
+    __shared__ T Bs[block_dim][block_dim];
+
+    for (int a = aStart, b = bStart; a <= aEnd; a += aStep, b += bStep){
+        As[ty][tx] = A[a + n * ty + tx];
+        Bs[ty][tx] = B[b + n * ty + tx];
+        __syncthreads();
+
+        for (int k = 0; i < block_dim; k++)
+            cSub += As[ty][k] * Bs[k][tx];
+        __syncthreads();
+    }
+
+    int c = n * block_dim * by + block_dim * bx;
+    C[c + wB * ty + tx] = cSub;
+}
+
 __host__ void matmul_1(const int *A, const int *B, int *C, unsigned int n,
                        unsigned int block_dim){
-    
-    // todo: convert this to using the grid-based indexing in the powerpoints, then map to other 2 implementation types
-    int iIndex = threadIdx.x + blockIdx.x * blockDim.x;
-    if (iIndex >= n*n) return;
-
-    for (int k = 0; k < n; k++){
-        int jIndex = (iIndex / n) * n + k;
-        int kIndex = k * n + (iIndex % n);
-        C[iIndex] += A[jIndex] * B[kIndex];
-    }
+    matmul<int>(A, B, C, n, block_dim);
 }
 
 __host__ void matmul_2(const float *A, const float *B, float *C, unsigned int n,
                        unsigned int block_dim){
-
+    matmul<float>(A, B, C, n, block_dim);
 }
 __host__ void matmul_3(const double *A, const double *B, double *C,
                        unsigned int n, unsigned int block_dim){
-    
+    matmul<double>(A, B, C, n, block_dim);
 }
 
 #endif
