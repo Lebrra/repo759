@@ -52,7 +52,6 @@ void doMatmul(int n, int blockSize, int type){
     auto end = chrono::steady_clock::now();
 	auto timePassed = chrono::duration_cast<std::chrono::microseconds>(end - start);
 
-    //cout << "Results of type " << typeof(T) << ":" << endl;
     cout << "element count:  \t" << n << endl;
 	cout << "time to process:\t" << (timePassed.count() / 1000) << " milliseconds\n";
 	cout << "first element:  \t" << hC[0] << endl;
@@ -69,6 +68,17 @@ int main(int argc, char* argv[]) {
     int type = atoi(argv[3]);
     
     cout << "I should execute matmul_" << type << " with an " << n << "x" << n << " matrix and " << block << " blocks\n";
+    switch(type){
+        case 1: 
+            doMatmul<int>(n, block, type);
+            break;
+        case 2:
+            doMatmul<float>(n, block, type);
+            break;
+        case 3:
+            doMatmul<double>(n, block, type);
+            break;
+    }
 
     return 0;
 }
