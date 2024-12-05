@@ -31,23 +31,24 @@ void doMatmul(int n, int blockSize){
     dim3 dimGrid(n/dimBlock.x, n/dimBlock.y);
 
     // do math:
-    switch(sizeof(T)){
-        case sizeof(int):
-            cout << "Calculating type of " << typeof(T) << endl;
-            matmul_1<<dimGrid, dimBlock>>(dA, dB, dC, n, blockSize);
-            break;
-        case sizeof(float):
-            cout << "Calculating type of " << typeof(T) << endl;
-            matmul_2<<dimGrid, dimBlock>>(dA, dB, dC, n, blockSize);
-            break;
-        case sizeof(double):
-            cout << "Calculating type of " << typeof(T) << endl;
-            matmul_3<<dimGrid, dimBlock>>(dA, dB, dC, n, blockSize);
-            break;
-        default:
-            cout << "Invalid type to process matmul.\n";
-            return;
-    }
+    //switch(sizeof(T)){
+    //    case sizeof(int):
+    //        cout << "Calculating type: int" << endl;
+    //        matmul_1<<dimGrid, dimBlock>>(dA, dB, dC, n, blockSize);
+    //        break;
+    //    case sizeof(float):
+    //        cout << "Calculating type: float" << endl;
+    //        matmul_2<<dimGrid, dimBlock>>(dA, dB, dC, n, blockSize);
+    //        break;
+    //    case sizeof(double):
+    //        cout << "Calculating type: double" << endl;
+    //        matmul_3<<dimGrid, dimBlock>>(dA, dB, dC, n, blockSize);
+    //        break;
+    //    default:
+    //        cout << "Invalid type to process matmul.\n";
+    //        return;
+    //}
+    matmul_1<<dimGrid, dimBlock>>(dA, dB, dC, n, blockSize);
     cudaDeviceSynchronize();
 
     // results:
@@ -56,7 +57,7 @@ void doMatmul(int n, int blockSize){
     auto end = chrono::steady_clock::now();
 	auto timePassed = chrono::duration_cast<std::chrono::microseconds>(end - start);
 
-    cout << "Results of type " << typeof(T) << ":" << endl;
+    //cout << "Results of type " << typeof(T) << ":" << endl;
     cout << "element count:  \t" << n << endl;
 	cout << "time to process:\t" << (timePassed.count() / 1000) << " milliseconds\n";
 	cout << "first element:  \t" << hC[0] << endl;
@@ -73,8 +74,8 @@ int main(int argc, char* argv[]) {
     
     // do all 3:
     doMatmul<int>(n, block);
-    doMatmul<float>(n, block);
-    doMatmul<double>(n, block);
+    //doMatmul<float>(n, block);
+    //doMatmul<double>(n, block);
 
     return 0;
 }
