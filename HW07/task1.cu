@@ -5,7 +5,7 @@
 using namespace std;
 
 template <typename T>
-void doMatmul(int n, int blockSize){
+void doMatmul(int n, int blockSize, int type){
     T hB[n*n], hA[n*n], hC[n*n], *dB, *dA, *dC;
 
     // randomization:
@@ -28,16 +28,16 @@ void doMatmul(int n, int blockSize){
 
     // do math:
     cout << "Switch time\n";
-    switch(sizeof(T)){
-        case sizeof(int):
+    switch(type){
+        case 1:
             cout << "Calculating type: int" << endl;
             matmul_1(dA, dB, dC, n, blockSize);
             break;
-        case sizeof(float):
+        case 2:
             cout << "Calculating type: float" << endl;
             matmul_2(dA, dB, dC, n, blockSize);
             break;
-        case sizeof(double):
+        case 3:
             cout << "Calculating type: double" << endl;
             matmul_3(dA, dB, dC, n, blockSize);
             break;
