@@ -27,7 +27,7 @@ void doMatmul(int n, int blockSize){
     cudaMemset(dC, 0, n * n * sizeof(T));
 
     // do math:
-    cout << "Switch time:\n";
+    cout << "Switch time\n";
     switch(typeof(T)){
         case int:
             cout << "Calculating type: int" << endl;
@@ -54,10 +54,10 @@ void doMatmul(int n, int blockSize){
 	auto timePassed = chrono::duration_cast<std::chrono::microseconds>(end - start);
 
     //cout << "Results of type " << typeof(T) << ":" << endl;
-    //cout << "element count:  \t" << n << endl;
-	//cout << "time to process:\t" << (timePassed.count() / 1000) << " milliseconds\n";
-	//cout << "first element:  \t" << hC[0] << endl;
-	//cout << "last element:   \t" << hC[n*n - 1] << endl << endl;
+    cout << "element count:  \t" << n << endl;
+	cout << "time to process:\t" << (timePassed.count() / 1000) << " milliseconds\n";
+	cout << "first element:  \t" << hC[0] << endl;
+	cout << "last element:   \t" << hC[n*n - 1] << endl << endl;
 
     cudaFree(dB);
     cudaFree(dA);
@@ -69,6 +69,7 @@ int main(int argc, char* argv[]) {
     int block = atoi(argv[2]);
     
     // do all 3:
+    cout << "Hello?\n";
     doMatmul<int>(n, block);
     //doMatmul<float>(n, block);
     //doMatmul<double>(n, block);
