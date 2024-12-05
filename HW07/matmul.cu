@@ -25,9 +25,9 @@ __global__ void matmul(const int *A, const int *B, int *C, unsigned int n, unsig
 
     int cSub = 0;
     
-    extern __shared__ T shared[];
-    int* As = (T*)shared;
-    int* Bs = (T*)&As[n*n];  
+    extern __shared__ int shared[];
+    int* As = (int*)shared;
+    int* Bs = (int*)&As[n*n];  
 
     for (int a = aStart, b = bStart; a <= aEnd; a += aStep, b += bStep){
         if(ty < 50 && tx < 50){
