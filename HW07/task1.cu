@@ -26,10 +26,6 @@ void doMatmul(int n, int blockSize){
     cudaMemcpy(dB, &hB, sizeof(T) * n * n, cudaMemcpyHostToDevice);
     cudaMemset(dC, 0, n * n * sizeof(T));
 
-    // figure out blocks:   **blockSize may not be a multiple of n ! (need to fix)
-    dim3 dimBlock(blockSize, blockSize);
-    dim3 dimGrid(n/dimBlock.x, n/dimBlock.y);
-
     // do math:
     //switch(sizeof(T)){
     //    case sizeof(int):
@@ -48,8 +44,7 @@ void doMatmul(int n, int blockSize){
     //        cout << "Invalid type to process matmul.\n";
     //        return;
     //}
-    matmul_1<<dimGrid, dimBlock>>(dA, dB, dC, n, blockSize);
-    cudaDeviceSynchronize();
+    matmul_1(dA, dB, dC, n, blockSize);
 
     // results:
     cudaMemcpy(&hC, dC, sizeof(T) * n * n, cudaMemcpyDeviceToHost);
