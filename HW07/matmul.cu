@@ -22,7 +22,7 @@ __global__ void matmul(const int *A, const int *B, int *C, unsigned int n, unsig
 
     int cSub = 0;
     
-    __shared__ int shared[][];
+    extern __shared__ int shared[10][10];
     //__shared__ int Bs[][];
 
     int* As = (int*)shared;
