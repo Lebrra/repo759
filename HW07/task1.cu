@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
     
     // do all 3:
     cout << "Hello?\n";
-    doMatmul<int>(n, block);
+    //doMatmul<int>(n, block);
     //doMatmul<float>(n, block);
     //doMatmul<double>(n, block);
 
