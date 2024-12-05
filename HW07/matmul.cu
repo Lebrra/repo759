@@ -67,7 +67,7 @@ __host__ void matmul_3(const double *A, const double *B, double *C,
                        unsigned int n, unsigned int block_dim){
     dim3 dimBlock(block_dim, block_dim);
     dim3 dimGrid(n/dimBlock.x, n/dimBlock.y);
-    //matmul<double><<<dimGrid, dimBlock, block_dim*block_dim*2 * sizeof(double)>>>(A, B, C, n, block_dim);
+    matmul<double><<<dimGrid, dimBlock, block_dim*block_dim*2 * sizeof(double)>>>(A, B, C, n, block_dim);
     cudaDeviceSynchronize();
 }
 
