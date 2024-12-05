@@ -22,8 +22,8 @@ __global__ void matmul(const int *A, const int *B, int *C, unsigned int n, unsig
 
     int cSub = 0;
     
-    __shared__ int As[block_dim][block_dim];
-    __shared__ int Bs[block_dim][block_dim];
+    __shared__ int As[][];
+    __shared__ int Bs[][];
 
     for (int a = aStart, b = bStart; a <= aEnd; a += aStep, b += bStep){
         As[ty][tx] = A[a + n * ty + tx];
@@ -36,14 +36,14 @@ __global__ void matmul(const int *A, const int *B, int *C, unsigned int n, unsig
     }
 
     int c = n * block_dim * by + block_dim * bx;
-    C[c + wB * ty + tx] = cSub;
+    C[c + n * ty + tx] = cSub;
 }
 
 __host__ void matmul_1(const int *A, const int *B, int *C, unsigned int n,
                        unsigned int block_dim){
     dim3 dimBlock(block_dim, block_dim);
     dim3 dimGrid(n/dimBlock.x, n/dimBlock.y);
-    matmul<<dimGrid, dimBlock>>(A, B, C, n, block_dim);
+    matmul<<dimGrid, dimBlock, block_dim>>(A, B, C, n, block_dim);
     cudaDeviceSynchronize();
 }
 
