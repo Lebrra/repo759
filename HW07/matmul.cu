@@ -22,11 +22,11 @@ __global__ void matmul(const int *A, const int *B, int *C, unsigned int n, unsig
 
     int cSub = 0;
     
-    __shared__ int shared[];
+    extern __shared__ int shared[];
     //__shared__ int Bs[][];
 
-    float* As = (int*)shared;
-    float* Bs = (int*)&As[n*n];
+    int* As = (int*)shared;
+    int* Bs = (int*)&As[n*n];
 
     for (int a = aStart, b = bStart; a <= aEnd; a += aStep, b += bStep){
         As[n * ty + tx] = A[a + n * ty + tx];
