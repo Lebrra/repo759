@@ -25,9 +25,8 @@ __global__ void matmul(const T *A, const T *B, T *C, unsigned int n, unsigned in
 
     T cSub = 0;
     
-    SharedMem<T> shared;
-    //extern __shared__ T shared[];
-    T* As = shared.getPointer();
+    extern __shared__ T shared[];
+    T* As = (T*)shared;
     T* Bs = (T*)&As[n*n];  
 
     for (int a = aStart, b = bStart; a <= aEnd; a += aStep, b += bStep){
