@@ -45,7 +45,6 @@ void doMatmul(int n, int blockSize){
             cout << "Invalid type to process matmul.\n";
             return;
     }
-    //matmul_1(dA, dB, dC, n, blockSize);
 
     // results:
     cudaMemcpy(&hC, dC, sizeof(T) * n * n, cudaMemcpyDeviceToHost);
@@ -67,12 +66,9 @@ void doMatmul(int n, int blockSize){
 int main(int argc, char* argv[]) {
     int n = atoi(argv[1]);
     int block = atoi(argv[2]);
+    int type = atoi(argv[3]);
     
-    // do all 3:
-    cout << "Hello?\n";
-    //doMatmul<int>(n, block);
-    //doMatmul<float>(n, block);
-    //doMatmul<double>(n, block);
+    cout << "I should execute matmul_" << type << " with an " << n << "x" << n << " matrix and " << block << " blocks\n";
 
     return 0;
 }
