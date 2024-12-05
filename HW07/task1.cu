@@ -26,7 +26,7 @@ void doInt(int n, int blockSize){
     cudaMemset(dC, 0, n * n * sizeof(int));
 
     // do math:
-    cout << "Calculating type: int" << endl;
+    cout << "Calculating type: int with generics" << endl;
     matmul_1(dA, dB, dC, n, blockSize);
 
     // results:
