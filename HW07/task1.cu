@@ -54,10 +54,10 @@ void doMatmul(int n, int blockSize){
 	auto timePassed = chrono::duration_cast<std::chrono::microseconds>(end - start);
 
     //cout << "Results of type " << typeof(T) << ":" << endl;
-    cout << "element count:  \t" << n << endl;
-	cout << "time to process:\t" << (timePassed.count() / 1000) << " milliseconds\n";
-	cout << "first element:  \t" << hC[0] << endl;
-	cout << "last element:   \t" << hC[n*n - 1] << endl << endl;
+    //cout << "element count:  \t" << n << endl;
+	//cout << "time to process:\t" << (timePassed.count() / 1000) << " milliseconds\n";
+	//cout << "first element:  \t" << hC[0] << endl;
+	//cout << "last element:   \t" << hC[n*n - 1] << endl << endl;
 
     cudaFree(dB);
     cudaFree(dA);
