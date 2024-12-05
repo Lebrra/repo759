@@ -25,16 +25,22 @@ __global__ void matmul(const T *A, const T *B, T *C, unsigned int n, unsigned in
 
     T cSub = 0;
     
-    __shared__ T As[1000][1000];
-    __shared__ T Bs[1000][1000];
+    __shared__ T As[50][50];
+    __shared__ T Bs[50][50];
 
     for (int a = aStart, b = bStart; a <= aEnd; a += aStep, b += bStep){
-        As[ty][tx] = A[a + n * ty + tx];
-        Bs[ty][tx] = B[b + n * ty + tx];
+        if(ty < 50 && tx < 50){
+            As[ty][tx] = A[a + n * ty + tx];
+            Bs[ty][tx] = B[b + n * ty + tx];
+        }
         __syncthreads();
 
-        for (int k = 0; k < block_dim; k++)
-            cSub += As[ty][k] * Bs[k][tx];
+        for (int k = 0; k < 50; k++){
+            if(ty < 50 && tx < 50){
+                cSub += As[ty][k] * Bs[k][tx];
+            }
+        }
+            
         __syncthreads();
     }
 
