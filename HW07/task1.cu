@@ -27,16 +27,17 @@ void doMatmul(int n, int blockSize){
     cudaMemset(dC, 0, n * n * sizeof(T));
 
     // do math:
-    switch(sizeof(T)){
-        case sizeof(int):
+    cout << "Switch time:\n";
+    switch(typeof(T)){
+        case int:
             cout << "Calculating type: int" << endl;
             matmul_1(dA, dB, dC, n, blockSize);
             break;
-        case sizeof(float):
+        case float:
             cout << "Calculating type: float" << endl;
             matmul_2(dA, dB, dC, n, blockSize);
             break;
-        case sizeof(double):
+        case double:
             cout << "Calculating type: double" << endl;
             matmul_3(dA, dB, dC, n, blockSize);
             break;
