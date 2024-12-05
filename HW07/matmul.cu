@@ -13,6 +13,9 @@ __global__ void matmul(const int *A, const int *B, int *C, unsigned int n, unsig
     int tx = threadIdx.x;
     int ty = threadIdx.y;
 
+    int c = n * block_dim * by + block_dim * bx;
+    if (c >= n*n) return;
+
     int aStart = n * block_dim * by;
     int aEnd = aStart + n - 1;
     int aStep = block_dim;
@@ -22,8 +25,8 @@ __global__ void matmul(const int *A, const int *B, int *C, unsigned int n, unsig
 
     int cSub = 0;
     
-    extern __shared__ int As[1000][1000];
-    extern __shared__ int Bs[1000][1000];
+    __shared__ int As[1000][1000];
+    __shared__ int Bs[1000][1000];
 
     for (int a = aStart, b = bStart; a <= aEnd; a += aStep, b += bStep){
         As[ty][tx] = A[a + n * ty + tx];
@@ -35,7 +38,6 @@ __global__ void matmul(const int *A, const int *B, int *C, unsigned int n, unsig
         __syncthreads();
     }
 
-    int c = n * block_dim * by + block_dim * bx;
     C[c + n * ty + tx] = cSub;
 }
 
