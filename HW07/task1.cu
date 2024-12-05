@@ -68,7 +68,7 @@ void doFloat(int n, int blockSize){
 
     // do math:
     cout << "Calculating type: float" << endl;
-    matmul_1(dA, dB, dC, n, blockSize);
+    matmul_2(dA, dB, dC, n, blockSize);
 
     // results:
     cudaMemcpy(&hC, dC, sizeof(float) * n * n, cudaMemcpyDeviceToHost);
@@ -109,7 +109,7 @@ void doDouble(int n, int blockSize){
 
     // do math:
     cout << "Calculating type: double" << endl;
-    matmul_1(dA, dB, dC, n, blockSize);
+    matmul_3(dA, dB, dC, n, blockSize);
 
     // results:
     cudaMemcpy(&hC, dC, sizeof(double) * n * n, cudaMemcpyDeviceToHost);
