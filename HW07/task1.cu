@@ -4,7 +4,8 @@
 #include "matmul.cuh"
 using namespace std;
 
-void doMatmul<T>(int n, int blockSize){
+template <typename T>
+void doMatmul(int n, int blockSize){
     T hB[n*n], hA[n*n], hC[n*n], *dB, *dA, *dC;
 
     // randomization:
@@ -25,21 +26,26 @@ void doMatmul<T>(int n, int blockSize){
     cudaMemcpy(dB, &hB, sizeof(T) * n * n, cudaMemcpyHostToDevice);
     cudaMemset(dC, 0, n * n * sizeof(T));
 
+    // figure out blocks:   **blockSize may not be a multiple of n ! (need to fix)
+    dim3 dimBlock(blockSize, blockSize);
+    dim3 dimGrid(n/dimBlock.x, n/dimBlock.y);
+
     // do math:
     switch(typeof(T)){
         case int:
-            matmul_1(dA, dB, dC, n, blockSize);
+            matmul_1<<dimGrid, dimBlock>>(dA, dB, dC, n, blockSize);
             break;
         case float:
-            matmul_2(dA, dB, dC, n, blockSize);
+            matmul_2<<dimGrid, dimBlock>>(dA, dB, dC, n, blockSize);
             break;
         case double:
-            matmul_3(dA, dB, dC, n, blockSize);
+            matmul_3<<dimGrid, dimBlock>>(dA, dB, dC, n, blockSize);
             break;
         default:
             cout << "Invalid type to process matmul.\n";
             return;
     }
+    cudaDeviceSynchronize();
 
     // results:
     cudaMemcpy(&hC, dC, sizeof(T) * n * n, cudaMemcpyDeviceToHost);
