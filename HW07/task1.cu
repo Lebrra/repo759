@@ -27,24 +27,24 @@ void doMatmul(int n, int blockSize){
     cudaMemset(dC, 0, n * n * sizeof(T));
 
     // do math:
-    //switch(sizeof(T)){
-    //    case sizeof(int):
-    //        cout << "Calculating type: int" << endl;
-    //        matmul_1<<dimGrid, dimBlock>>(dA, dB, dC, n, blockSize);
-    //        break;
-    //    case sizeof(float):
-    //        cout << "Calculating type: float" << endl;
-    //        matmul_2<<dimGrid, dimBlock>>(dA, dB, dC, n, blockSize);
-    //        break;
-    //    case sizeof(double):
-    //        cout << "Calculating type: double" << endl;
-    //        matmul_3<<dimGrid, dimBlock>>(dA, dB, dC, n, blockSize);
-    //        break;
-    //    default:
-    //        cout << "Invalid type to process matmul.\n";
-    //        return;
-    //}
-    matmul_1(dA, dB, dC, n, blockSize);
+    switch(sizeof(T)){
+        case sizeof(int):
+            cout << "Calculating type: int" << endl;
+            matmul_1(dA, dB, dC, n, blockSize);
+            break;
+        case sizeof(float):
+            cout << "Calculating type: float" << endl;
+            matmul_2(dA, dB, dC, n, blockSize);
+            break;
+        case sizeof(double):
+            cout << "Calculating type: double" << endl;
+            matmul_3(dA, dB, dC, n, blockSize);
+            break;
+        default:
+            cout << "Invalid type to process matmul.\n";
+            return;
+    }
+    //matmul_1(dA, dB, dC, n, blockSize);
 
     // results:
     cudaMemcpy(&hC, dC, sizeof(T) * n * n, cudaMemcpyDeviceToHost);
