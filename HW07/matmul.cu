@@ -27,19 +27,15 @@ __global__ void matmul(const T *A, const T *B, T *C, unsigned int n, unsigned in
     
     extern __shared__ T shared[];
     T* As = (T*)shared;
-    T* Bs = (T*)&As[n*n];  
+    T* Bs = (T*)&As[block_dim*block_dim];  
 
     for (int a = aStart, b = bStart; a <= aEnd; a += aStep, b += bStep){
-        if(ty < 50 && tx < 50){
-            As[ty * n + tx] = A[a + n * ty + tx];
-            Bs[ty * n + tx] = B[b + n * ty + tx];
-        }
+        As[ty * block_dim + tx] = A[a + n * ty + tx];
+        Bs[ty * block_dim + tx] = B[b + n * ty + tx];
         __syncthreads();
 
         for (int k = 0; k < 50; k++){
-            if(ty < 50 && tx < 50){
-                cSub += As[ty + n * k] * Bs[k + n * tx];
-            }
+            cSub += As[ty + block_dim * k] * Bs[k + block_dim * tx];
         }
             
         __syncthreads();
