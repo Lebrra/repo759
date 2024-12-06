@@ -36,8 +36,9 @@ int main(int argc, char* argv[]) {
 	auto timePassed = chrono::duration_cast<std::chrono::microseconds>(end - start);
 
     cout << "element count:  \t" << n << endl;
+    cout << "blocks:         \t" << blocks << endl;
 	cout << "time to process:\t" << (timePassed.count() / 1000) << " milliseconds\n";
-	cout << "result:         \t" << hOutput[0] << endl;
+	cout << "result:         \t" << hOutput[0] << endl << endl;
 
     cudaFree(dInput);
     cudaFree(dOutput);
