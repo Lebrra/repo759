@@ -13,7 +13,7 @@ nvcc task1.cu matmul.cu -Xcompiler -O3 -Xcompiler -Wall -Xptxas -O3 -std c++17 -
 date
 
 n=512
-b=512
+b=100
 
 ./task1 $n $b 1;
 ./task1 $n $b 2;
