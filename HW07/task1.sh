@@ -12,9 +12,16 @@ module load gcc/11.3.0
 nvcc task1.cu matmul.cu -Xcompiler -O3 -Xcompiler -Wall -Xptxas -O3 -std c++17 -o task1
 date
 
-n=512
 b=100
 
-./task1 $n $b 1;
-./task1 $n $b 2;
-./task1 $n $b 3;
+pow=1
+for ((i=0; i<4; i++)) do pow=$(($pow*2)); done
+for ((i=0; i<10; i++)) 
+do 
+    pow=$(($pow*2)); 
+    ./task1 $pow $b 1;
+    ./task1 $pow $b 2;
+    ./task1 $pow $b 3;
+    echo "=============================";
+done
+
