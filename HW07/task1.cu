@@ -26,7 +26,7 @@ void doInt(int n, int blockSize){
     cudaMemset(dC, 0, n * n * sizeof(int));
 
     // do math:
-    cout << "Calculating type: int" << endl;
+    cout << "Calculating type:\tint" << endl;
     matmul_1(dA, dB, dC, n, blockSize);
 
     // results:
@@ -37,8 +37,8 @@ void doInt(int n, int blockSize){
 
     cout << "element count:  \t" << n << endl;
 	cout << "time to process:\t" << (timePassed.count() / 1000) << " milliseconds\n";
-	cout << "first element:  \t" << hC[0] << " (" << hA[0] << ", " << hB[0] << ")" << endl;
-	cout << "last element:   \t" << hC[n*n - 1] << " (" << hA[n*n - 1] << ", " << hB[n*n - 1] << ")" << endl << endl;
+	cout << "first element:  \t" << hA[0] << endl;
+	cout << "last element:   \t" << hB[n*n - 1] << endl;
     cudaFree(dB);
     cudaFree(dA);
     cudaFree(dC);
@@ -66,7 +66,7 @@ void doFloat(int n, int blockSize){
     cudaMemset(dC, 0, n * n * sizeof(float));
 
     // do math:
-    cout << "Calculating type: float" << endl;
+    cout << "Calculating type:\tfloat" << endl;
     matmul_2(dA, dB, dC, n, blockSize);
 
     // results:
@@ -77,8 +77,8 @@ void doFloat(int n, int blockSize){
 
     cout << "element count:  \t" << n << endl;
 	cout << "time to process:\t" << (timePassed.count() / 1000) << " milliseconds\n";
-	cout << "first element:  \t" << hC[0] << " (" << hA[0] << ", " << hB[0] << ")" << endl;
-	cout << "last element:   \t" << hC[n*n - 1] << " (" << hA[n*n - 1] << ", " << hB[n*n - 1] << ")" << endl << endl;
+	cout << "first element:  \t" << hA[0] << endl;
+	cout << "last element:   \t" << hB[n*n - 1] << endl;
 
     cudaFree(dB);
     cudaFree(dA);
@@ -107,7 +107,7 @@ void doDouble(int n, int blockSize){
     cudaMemset(dC, 0, n * n * sizeof(double));
 
     // do math:
-    cout << "Calculating type: double" << endl;
+    cout << "Calculating type:\tdouble" << endl;
     matmul_3(dA, dB, dC, n, blockSize);
 
     // results:
@@ -118,8 +118,8 @@ void doDouble(int n, int blockSize){
 
     cout << "element count:  \t" << n << endl;
 	cout << "time to process:\t" << (timePassed.count() / 1000) << " milliseconds\n";
-	cout << "first element:  \t" << hC[0] << " (" << hA[0] << ", " << hB[0] << ")" << endl;
-	cout << "last element:   \t" << hC[n*n - 1] << " (" << hA[n*n - 1] << ", " << hB[n*n - 1] << ")" << endl << endl;
+	cout << "first element:  \t" << hA[0] << endl;
+	cout << "last element:   \t" << hB[n*n - 1] << endl;
 
     cudaFree(dB);
     cudaFree(dA);
@@ -131,7 +131,6 @@ int main(int argc, char* argv[]) {
     int block = atoi(argv[2]);
     int type = atoi(argv[3]);
     
-    cout << "I should execute matmul_" << type << " with an " << n << "x" << n << " matrix and " << block << " blocks\n";
     switch(type){
         case 1: 
             doInt(n, block);
