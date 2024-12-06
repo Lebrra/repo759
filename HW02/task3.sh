@@ -10,4 +10,4 @@ module load gcc/13.2.0
 module load nvidia/cuda
 g++ task3.cpp matmul.cpp -Wall -O3 -std=c++17 -o task3
 date
-./task3
+./task3 $1
