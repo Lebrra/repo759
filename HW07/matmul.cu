@@ -49,6 +49,10 @@ __host__ void matmul_1(const int *A, const int *B, int *C, unsigned int n,
     dim3 dimBlock(block_dim, block_dim);
     dim3 dimGrid((n + block_dim - 1) / block_dim, (n + block_dim - 1) / block_dim);
     matmul<int><<<dimGrid, dimBlock, block_dim*block_dim*2 * sizeof(int)>>>(A, B, C, n, block_dim);
+    cudaError_t err = cudaGetLastError();
+    if (err != cudaSuccess) {
+        printf("CUDA error: %s\n", cudaGetErrorString(err));
+    }
     cudaDeviceSynchronize();
 }
 
