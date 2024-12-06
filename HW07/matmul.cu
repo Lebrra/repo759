@@ -24,6 +24,10 @@ __global__ void matmul(const T *A, const T *B, T *C, unsigned int n, unsigned in
     int bStep = block_dim * n;
 
     T cSub = 0;
+
+    if (c < 20){
+        printf("A[%d] = %d, B[%d] = %d\n", c, A[c], c, B[c]);
+    }
     
     extern __shared__ char shared[];
     T* As = (T*)shared;
