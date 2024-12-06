@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
     cudaMemset(dOutput, 0, sizeof(float) * blocks);
 
     // do math:
-    reduce(dInput, dOutput, n, t);
+    reduce(&dInput, &dOutput, n, t);
 
     // results:
     cudaMemcpy(&hOutput, dOutput, sizeof(float) * blocks, cudaMemcpyDeviceToHost);
