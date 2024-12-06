@@ -3,7 +3,7 @@
 #SBATCH -p instruction
 #SBATCH -J HW02_Task3
 #SBATCH -o Task2_3.out -e Task2_3.err
-#SBATCH -t 0-00:05:00
+#SBATCH -t 0-00:20:00
 #SBATCH --gres=gpu:1 -c 1
 
 module load gcc/13.2.0
