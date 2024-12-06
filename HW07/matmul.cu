@@ -14,6 +14,7 @@ __global__ void matmul(const T *A, const T *B, T *C, unsigned int n, unsigned in
     int ty = threadIdx.y;
 
     int c = n * block_dim * by + block_dim * bx + n * ty + tx;
+    printf("c = %d", c);
     if (c >= n*n) return;
 
     int aStart = n * block_dim * by;
@@ -28,11 +29,6 @@ __global__ void matmul(const T *A, const T *B, T *C, unsigned int n, unsigned in
     extern __shared__ char shared[];
     T* As = (T*)shared;
     T* Bs = (T*)&As[block_dim*block_dim];  
-
-    if (tx < block_dim && ty < block_dim) {
-        printf("As[%d][%d] = %f\n", ty, tx, As[ty * block_dim + tx]);
-        printf("Bs[%d][%d] = %f\n", ty, tx, Bs[ty * block_dim + tx]);
-    }
 
     for (int a = aStart, b = bStart; a <= aEnd; a += aStep, b += bStep){
         As[ty * block_dim + tx] = A[a + n * ty + tx];
