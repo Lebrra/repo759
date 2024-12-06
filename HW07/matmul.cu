@@ -25,9 +25,10 @@ __global__ void matmul(const T *A, const T *B, T *C, unsigned int n, unsigned in
 
     T cSub = 0;
 
-    if (ty < 5 && tx < 5 && bx < 5 && by < 5){
-        printf("A[%d] = %d, B[%d] = %d\n", c, A[c], c, B[c]);
-    }
+    if (tx < block_dim && ty < block_dim) {
+    printf("As[%d][%d] = %f\n", ty, tx, As[ty * block_dim + tx]);
+    printf("Bs[%d][%d] = %f\n", ty, tx, Bs[ty * block_dim + tx]);
+}
     
     extern __shared__ char shared[];
     T* As = (T*)shared;
