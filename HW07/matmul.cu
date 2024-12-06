@@ -13,8 +13,8 @@ __global__ void matmul(const T *A, const T *B, T *C, unsigned int n, unsigned in
     int tx = threadIdx.x;
     int ty = threadIdx.y;
 
-    int c = n * block_dim * by + block_dim * bx;
-    if (c + n * ty + tx >= n*n) return;
+    int c = n * (block_dim * by + ty) + (block_dim * bx + tx);
+    if (c >= n*n) return;
 
     int aStart = n * block_dim * by;
     int aEnd = aStart + n - 1;
@@ -41,13 +41,13 @@ __global__ void matmul(const T *A, const T *B, T *C, unsigned int n, unsigned in
         __syncthreads();
     }
 
-    C[c + n * ty + tx] = cSub;
+    C[c] = cSub;
 }
 
 __host__ void matmul_1(const int *A, const int *B, int *C, unsigned int n,
                        unsigned int block_dim){
     dim3 dimBlock(block_dim, block_dim);
-    dim3 dimGrid(n/dimBlock.x, n/dimBlock.y);
+    dim3 dimGrid((n + block_dim - 1) / block_dim, (n + block_dim - 1) / block_dim);
     matmul<int><<<dimGrid, dimBlock, block_dim*block_dim*2 * sizeof(int)>>>(A, B, C, n, block_dim);
     cudaDeviceSynchronize();
 }
@@ -55,14 +55,14 @@ __host__ void matmul_1(const int *A, const int *B, int *C, unsigned int n,
 __host__ void matmul_2(const float *A, const float *B, float *C, unsigned int n,
                        unsigned int block_dim){
     dim3 dimBlock(block_dim, block_dim);
-    dim3 dimGrid(n/dimBlock.x, n/dimBlock.y);
+    dim3 dimGrid((n + block_dim - 1) / block_dim, (n + block_dim - 1) / block_dim);
     matmul<float><<<dimGrid, dimBlock, block_dim*block_dim*2 * sizeof(float)>>>(A, B, C, n, block_dim);
     cudaDeviceSynchronize();
 }
 __host__ void matmul_3(const double *A, const double *B, double *C,
                        unsigned int n, unsigned int block_dim){
     dim3 dimBlock(block_dim, block_dim);
-    dim3 dimGrid(n/dimBlock.x, n/dimBlock.y);
+    dim3 dimGrid((n + block_dim - 1) / block_dim, (n + block_dim - 1) / block_dim);
     matmul<double><<<dimGrid, dimBlock, block_dim*block_dim*2 * sizeof(double)>>>(A, B, C, n, block_dim);
     cudaDeviceSynchronize();
 }
