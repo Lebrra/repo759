@@ -25,7 +25,7 @@ __global__ void matmul(const T *A, const T *B, T *C, unsigned int n, unsigned in
 
     T cSub = 0;
     
-    extern __shared__ T shared[];
+    extern __shared__ char shared[];
     T* As = (T*)shared;
     T* Bs = (T*)&As[block_dim*block_dim];  
 
