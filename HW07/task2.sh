@@ -12,4 +12,10 @@ module load gcc/11.3.0
 nvcc task2.cu reduce.cu -Xcompiler -O3 -Xcompiler -Wall -Xptxas -O3 -std c++17 -o task2
 date
 
-./task2 1024 256;
+pow=1
+for ((i=0; i<9; i++)) do pow=$(($pow*2)); done
+for ((i=0; i<20; i++)) 
+do 
+    pow=$(($pow*2)); 
+    ./task2 $pow 256;
+done
