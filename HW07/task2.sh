@@ -17,5 +17,5 @@ for ((i=0; i<9; i++)) do pow=$(($pow*2)); done
 for ((i=0; i<=20; i++)) 
 do 
     pow=$(($pow*2)); 
-    ./task2 $pow 256;
+    ./task2 $pow 1024;
 done

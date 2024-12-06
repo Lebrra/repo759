@@ -25,6 +25,8 @@ __host__ void reduce(float **input, float **output, unsigned int N,
                      unsigned int threads_per_block){
     int blocks = (N + threads_per_block * 2 - 1) / (threads_per_block * 2);
 
+    // here is my in-progress for supporting multiple kernel calls - I didn't get it working int time to submit :(
+
     //if (blocks > MAX_BLOCKS){
     //    int iterations = (blocks + MAX_BLOCKS - 1) / MAX_BLOCKS;
 //
