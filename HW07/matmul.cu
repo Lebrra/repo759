@@ -25,7 +25,7 @@ __global__ void matmul(const T *A, const T *B, T *C, unsigned int n, unsigned in
 
     T cSub = 0;
 
-    if (c < 20){
+    if (ty < 5 && tx < 5 && bx < 5 && by < 5){
         printf("A[%d] = %d, B[%d] = %d\n", c, A[c], c, B[c]);
     }
     
