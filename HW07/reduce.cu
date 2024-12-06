@@ -1,7 +1,7 @@
 #ifndef REDUCE_CUH
 
 __global__ void reduce_kernel(float *g_idata, float *g_odata, unsigned int n){
-    extern __shared__ int shared[];
+    extern __shared__ float shared[];
 
     int tid = threadIdx.x;
     int i = blockIdx.x * (blockDim.x * 2) + threadIdx.x;
