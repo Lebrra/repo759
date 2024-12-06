@@ -23,7 +23,7 @@ __global__ void reduce_kernel(float *g_idata, float *g_odata, unsigned int n){
 
 __host__ void reduce(float **input, float **output, unsigned int N,
                      unsigned int threads_per_block){
-    int blocks = (N + threads_per_block - 1) / threads_per_block / 2;
+    int blocks = (N + threads_per_block * 2 - 1) / (threads_per_block * 2);
 
     if (blocks > MAX_BLOCKS){
         int iterations = (blocks + MAX_BLOCKS - 1) / MAX_BLOCKS;
@@ -34,22 +34,22 @@ __host__ void reduce(float **input, float **output, unsigned int N,
         
         for (int i = 0; i < iterations - 1; i++){
             // do max blocks 
-            reduce_kernel<<<MAX_BLOCKS, threads_per_block, MAX_BLOCKS>>>(*input, dPartialOutput, i * MAX_BLOCKS);
+            reduce_kernel<<<MAX_BLOCKS, threads_per_block, MAX_BLOCKS * sizeof(float)>>>(*input, dPartialOutput, i * MAX_BLOCKS);
             cudaDeviceSynchronize();
 
             // copy back section to full output:
-            cudaMemcpy((float*)&output[i * MAX_BLOCKS], dPartialOutput, sizeof(float), cudaMemcpyDeviceToHost);
+            cudaMemcpy((float*)&output[i * MAX_BLOCKS], dPartialOutput, sizeof(float) * MAX_BLOCKS, cudaMemcpyDeviceToHost);
         }
 
         // do final with remaining blocks
         int remainingBlocks = blocks % MAX_BLOCKS;
         if (remainingBlocks == 0) remainingBlocks = MAX_BLOCKS;
 
-        reduce_kernel<<<remainingBlocks, threads_per_block, remainingBlocks>>>(*input, dPartialOutput, (iterations - 1) * MAX_BLOCKS);
+        reduce_kernel<<<remainingBlocks, threads_per_block, remainingBlocks * sizeof(float)>>>(*input, dPartialOutput, (iterations - 1) * MAX_BLOCKS);
         cudaDeviceSynchronize();
 
         // copy back section to full output:
-        cudaMemcpy((float*)&output[(iterations - 1) * MAX_BLOCKS], dPartialOutput, sizeof(float), cudaMemcpyDeviceToHost);
+        cudaMemcpy((float*)&output[(iterations - 1) * MAX_BLOCKS], dPartialOutput, sizeof(float) * remainingBlocks, cudaMemcpyDeviceToHost);
 
         cudaFree(dPartialOutput);
 
