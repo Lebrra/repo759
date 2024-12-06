@@ -37,9 +37,8 @@ void doInt(int n, int blockSize){
 
     cout << "element count:  \t" << n << endl;
 	cout << "time to process:\t" << (timePassed.count() / 1000) << " milliseconds\n";
-	cout << "first element:  \t" << hC[0] << " ( = " << hA[0] << " * " << hb[0] << ")" << endl;
-	cout << "last element:   \t" << hC[n*n - 1] << " ( = " << hA[n*n - 1] << " * " << hb[n*n - 1] << ")" << endl << endl;
-
+	cout << "first element:  \t" << hC[0] << " (" << hA[0] << ", " << hB[0] << ")" << endl;
+	cout << "last element:   \t" << hC[n*n - 1] << " (" << hA[n*n - 1] << ", " << hB[n*n - 1] << ")" << endl << endl;
     cudaFree(dB);
     cudaFree(dA);
     cudaFree(dC);
@@ -78,8 +77,8 @@ void doFloat(int n, int blockSize){
 
     cout << "element count:  \t" << n << endl;
 	cout << "time to process:\t" << (timePassed.count() / 1000) << " milliseconds\n";
-	cout << "first element:  \t" << hC[0] << endl;
-	cout << "last element:   \t" << hC[n*n - 1] << endl << endl;
+	cout << "first element:  \t" << hC[0] << " (" << hA[0] << ", " << hB[0] << ")" << endl;
+	cout << "last element:   \t" << hC[n*n - 1] << " (" << hA[n*n - 1] << ", " << hB[n*n - 1] << ")" << endl << endl;
 
     cudaFree(dB);
     cudaFree(dA);
@@ -119,8 +118,8 @@ void doDouble(int n, int blockSize){
 
     cout << "element count:  \t" << n << endl;
 	cout << "time to process:\t" << (timePassed.count() / 1000) << " milliseconds\n";
-	cout << "first element:  \t" << hC[0] << endl;
-	cout << "last element:   \t" << hC[n*n - 1] << endl << endl;
+	cout << "first element:  \t" << hC[0] << " (" << hA[0] << ", " << hB[0] << ")" << endl;
+	cout << "last element:   \t" << hC[n*n - 1] << " (" << hA[n*n - 1] << ", " << hB[n*n - 1] << ")" << endl << endl;
 
     cudaFree(dB);
     cudaFree(dA);
