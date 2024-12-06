@@ -24,15 +24,15 @@ __global__ void matmul(const T *A, const T *B, T *C, unsigned int n, unsigned in
     int bStep = block_dim * n;
 
     T cSub = 0;
-
-    if (tx < block_dim && ty < block_dim) {
-    printf("As[%d][%d] = %f\n", ty, tx, As[ty * block_dim + tx]);
-    printf("Bs[%d][%d] = %f\n", ty, tx, Bs[ty * block_dim + tx]);
-}
     
     extern __shared__ char shared[];
     T* As = (T*)shared;
     T* Bs = (T*)&As[block_dim*block_dim];  
+
+    if (tx < block_dim && ty < block_dim) {
+        printf("As[%d][%d] = %f\n", ty, tx, As[ty * block_dim + tx]);
+        printf("Bs[%d][%d] = %f\n", ty, tx, Bs[ty * block_dim + tx]);
+    }
 
     for (int a = aStart, b = bStart; a <= aEnd; a += aStep, b += bStep){
         As[ty * block_dim + tx] = A[a + n * ty + tx];
