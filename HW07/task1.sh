@@ -12,4 +12,9 @@ module load gcc/11.3.0
 nvcc task1.cu matmul.cu -Xcompiler -O3 -Xcompiler -Wall -Xptxas -O3 -std c++17 -o task1
 date
 
-./task1 512 512 1;
+n=512
+b=512
+
+./task1 $n $b 1;
+./task1 $n $b 2;
+./task1 $n $b 3;
